@@ -26,17 +26,25 @@ end
 %% Launch CFD simulations
 % Cycle through mach and alfa to create a Cl|Cd vs alpha|Ma table for the
 % current profile
-machVec = [0.5 0.6 0.7];
-alfaVec = [3 6 9 12];
+
+% NOTA: Ripetere 2 volte l'ultimo elemento per questioni di ciclo e
+% verificare che il config sia inizializzato ai valori iniziali.
+machVec = [0.5 0.6];  
+alfaVec = [3 6];
+
+s = readlines("naca0012_JST.cfg");
+ind_aoa = find(strncmp(s, 'AOA', 3));
+ind_mach = find(strncmp(s, 'MACH_NUMBER', 11));
 for ii = 1:length(machVec)
+    s{ind_mach} = ['MACH_NUMBER=' num2str(machVec(jj))];
+    writelines(s, "naca0012_JST.cfg");
     for jj = 1:length(alfaVec)
         % Specify the WSL commands you want to execute
-        wslCommands =  ["mpirun -n 8 SU2_CFD naca0012_JST.cfg",
-            "sed -i ""s/AOA= " + num2str(alfaVec(jj)) + "/AOA= " + num2str(alfaVec(jj+1)) + "/"" naca0012_JST.cfg"];
-
-        wslCommand = strjoin(wslCommands, '; ');
+        s{ind_aoa} = ['AOA=' num2str(alfaVec(jj))];
+        writelines(s, "naca0012_JST.cfg");
         % Launch WSL and execute the commands
-        [status, result] = system('wsl ' + wslCommand);
+        launchSim = "mpirun -n 8 SU2_CFD naca0012_JST.cfg";
+        [status, result] = system('wsl ' + launchSim);
         
         % Check the status and display the result
         if status == 0
@@ -48,12 +56,8 @@ for ii = 1:length(machVec)
             disp('Error message:');
             disp(result);
         end
-
     end    
 end
-
-
-
 
 %% Rotor power evaluation
 
