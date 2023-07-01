@@ -33,8 +33,8 @@ end
 
 % NOTA: Ripetere 2 volte l'ultimo elemento per questioni di ciclo e
 % verificare che il config sia inizializzato ai valori iniziali.
-machVec = [0.5 0.6];  
-alfaVec = [3 6 9];
+machVec = [0.52 0.54 0.56 0.58 0.6 0.62];  
+alfaVec = [0 2 4 6 8 10 12 14];
 
 s1 = readlines("naca0012_JST.cfg");
 s2 = readlines("naca0012_JST2.cfg");
@@ -44,11 +44,13 @@ Cl_mat = zeros(length(machVec), length(alfaVec));
 Cd_mat = zeros(length(machVec), length(alfaVec));
 Cm_mat = zeros(length(machVec), length(alfaVec));
 for ii = 1:length(machVec)
+    m_iter = ii
     s1{ind_mach} = ['MACH_NUMBER=' num2str(machVec(ii))];
     s2{ind_mach} = ['MACH_NUMBER=' num2str(machVec(ii))];
     writelines(s1, "naca0012_JST.cfg");
     writelines(s2, "naca0012_JST2.cfg");
     for jj = 1:2:length(alfaVec)
+        a_iter = jj
         % Update AOA entry in config file
         s1{ind_aoa} = ['AOA=' num2str(alfaVec(jj))];
         writelines(s1, "naca0012_JST.cfg");
@@ -58,7 +60,7 @@ for ii = 1:length(machVec)
         if jj+1<=length(alfaVec)
             s2{ind_aoa} = ['AOA=' num2str(alfaVec(jj+1))];
             writelines(s2, "naca0012_JST2.cfg");
-            launchSim2 = "wsl mpirun -n 4 SU2_CFD naca0012_JST2.cfg";
+            launchSim2 = "wsl mpirun -n 8 SU2_CFD naca0012_JST2.cfg";
             system(launchSim2)
             % Retrieve Cl, Cd, Mz for the 2nd simulation
             history2 = importCoeffs('history2.csv');

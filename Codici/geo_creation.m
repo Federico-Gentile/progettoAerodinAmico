@@ -9,7 +9,7 @@ function [] = geo_creation(x)
 % fra il vettore h_size del NACA0012 di Caccia e una misura di riferimento (ad esempio 0.01 o 0.005)
 %--------------------------------------------------------------------------
 %% C-Grid data
-h_mesh = 0.004;          % Can be tuned if necessary
+h_mesh = 0.003;          % Can be tuned if necessary
 H      = h_mesh*100;     
 L      = 10;             % C-grid farfield dimension
 %--------------------------------------------------------------------------
