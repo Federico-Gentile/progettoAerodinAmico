@@ -16,7 +16,7 @@ delete *.vtu
 x = [0.4 0.25 0.290 0.5]; % profilo goccia 2
 % x = [0.3 0.12 0.4322 2.022];  % simile al NACA0012
 %% File .geo creation
-geo_creation(x)
+geoCreation(x)
 
 %% Mesh creation
 % Writing the wsl commands to generate the mesh

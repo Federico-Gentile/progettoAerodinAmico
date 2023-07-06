@@ -1,4 +1,4 @@
-function [] = geo_creation(x)
+function [] = geoCreation(x)
 
 % NOTE:
 % iter contiene i_cycle (iterata del ciclo di ottimizzazione) e i_part (indice della particella)
@@ -15,7 +15,7 @@ L      = 10;             % C-grid farfield dimension
 %--------------------------------------------------------------------------
 
 %% Airfoil data import
-data_airfoil = airfoil_coordinates(x, h_mesh);
+data_airfoil = airfoilCoordinates(x, h_mesh);
 %--------------------------------------------------------------------------
 
 %% Airfoil points

@@ -1,5 +1,5 @@
 
-function [data_airfoil] = airfoil_coordinates(x, h_mesh)
+function [data_airfoil] = airfoilCoordinates(x, h_mesh)
 
 % NOTE:
 % data_airfoil deve contenere 801 coordinate x,y dei punti del profilo
