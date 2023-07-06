@@ -11,8 +11,8 @@
 %% FOR TESTING ONLY
     h = 0.0025;
     % 10 15 20 25 30 35
-    R = 35;
-    BL = 1;
+    R = 10;
+    BL = 0;
     % x = [XT,T,rho0,betaTE]
     % Upper and lower limits proposed by S. Bortolotti thesis
     % % % XT ∈ [0.21, 0.4]
@@ -114,7 +114,7 @@ A(811,:) = [811, 0.25, -Rref, 0, Href];           % basso dx
 
 %% Printing
 % GMSH geometry file is stored as .geo file
-fileID = fopen('meshG6.geo','w');
+fileID = fopen('meshG1.geo','w');
 
 % Scrittura di tutti i punti airfoil + C-grid
 for i=1:size(A,1)
