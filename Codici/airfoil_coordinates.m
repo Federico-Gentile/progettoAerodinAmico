@@ -7,7 +7,7 @@ function [data_airfoil] = airfoil_coordinates(x, h_mesh)
 % data_airfoil deve contenere 801 valori di h (dimensione mesh a ciascun punto)
 % Parametrizzazione IGP richiede soluzione sistema lineare
 % "An improved geometric parameter airfoil parameterizationmethod", Lu Xiaoqiang, Huang Jun, Song Lei, Li Jing (2018)
-% p = [XT,T,rho0,betaTE]
+% x = [XT,T,rho0,betaTE]
 % t = [t1,t2,t3,t4,t5]
 %--------------------------------------------------------------------------
 
@@ -82,9 +82,9 @@ data_airfoil.x = [x_u;x_l];
 data_airfoil.y = [y_u;y_l];
 data_airfoil.h = h_airfoil;
 
-% % % figure()
-% % % plot(data_airfoil.x, data_airfoil.y,'ok','MarkerSize',4)
-% % % title('IGP parameterization - $X_T$,T,$\rho_0$,$\beta_{TE}$','interpreter','latex')
-% % % hold on
-% % % xlim([-0.05 1.05])
-% % % axis equal
+figure()
+plot(data_airfoil.x, data_airfoil.y,'ok','MarkerSize',4)
+title('IGP parameterization - $X_T$,T,$\rho_0$,$\beta_{TE}$','interpreter','latex')
+hold on
+xlim([-0.05 1.05])
+axis equal
