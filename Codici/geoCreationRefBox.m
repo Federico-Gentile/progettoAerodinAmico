@@ -9,8 +9,9 @@
 %--------------------------------------------------------------------------
 
 %% FOR TESTING ONLY
-    h = 0.003;
-    R = 10;
+    h = 0.0025;
+    % 10 15 20 25 30 35
+    R = 35;
     BL = 1;
     % x = [XT,T,rho0,betaTE]
     % Upper and lower limits proposed by S. Bortolotti thesis
@@ -65,8 +66,8 @@
     elseif II == 2
     H = 400.*h;            % Dimension at farfield for grid ind.
     end
-    Href   = 15.*h;           % Dimension at refinement box boundary
-    Rref   = 0.7;            % C-grid refinement box dimension
+    Href   = 13.*h;           % Dimension at refinement box boundary
+    Rref   = 0.6;            % C-grid refinement box dimension
 %--------------------------------------------------------------------------
 
 %% Airfoil data import
@@ -113,7 +114,7 @@ A(811,:) = [811, 0.25, -Rref, 0, Href];           % basso dx
 
 %% Printing
 % GMSH geometry file is stored as .geo file
-fileID = fopen('meshRefBox.geo','w');
+fileID = fopen('meshG6.geo','w');
 
 % Scrittura di tutti i punti airfoil + C-grid
 for i=1:size(A,1)
