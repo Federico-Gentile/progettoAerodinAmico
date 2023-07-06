@@ -1,4 +1,4 @@
-function [] = geoCreation(x)
+function [] = geoCreation2(x,h,H,R)
 
 % NOTE:
 % iter contiene i_cycle (iterata del ciclo di ottimizzazione) e i_part (indice della particella)
@@ -8,14 +8,17 @@ function [] = geoCreation(x)
 % Il vettore h deve essere già nella sua forma finale, ovvero il prodotto
 % fra il vettore h_size del NACA0012 di Caccia e una misura di riferimento (ad esempio 0.01 o 0.005)
 %--------------------------------------------------------------------------
-%% C-Grid data
-h_mesh = 0.004;          % Can be tuned if necessary
-H      = h_mesh*100;     
-L      = 10;             % C-grid farfield dimension
+%% C-Grid data (Given as INPUT)
+% Default values for a smooth, coarse grid are the following
+% h      = 0.002;          % Can be tuned if necessary
+% H      = 1;     
+% R      = 10;             % C-grid farfield dimension
+% Href   = 0.04;
+% Rref   = 0.18;
 %--------------------------------------------------------------------------
 
 %% Airfoil data import
-data_airfoil = airfoilCoordinates(x, h_mesh);
+data_airfoil = airfoilCoordinates(x, h);
 %--------------------------------------------------------------------------
 
 %% Airfoil points
@@ -26,17 +29,25 @@ for i=1:n
    A(i,2)=data_airfoil.x(i);   
    A(i,3)=data_airfoil.y(i);         
    A(i,4)=0;        % z=0 (2D mesh)
-   A(i,5)=data_airfoil.h_vect(i);
+   A(i,5)=data_airfoil.h(i);
 end
 %--------------------------------------------------------------------------
 
 %% C-Grid points
-A(802,:) = [802, 2*L, -L, 0, H];    % basso dx
-A(803,:) = [803, 2*L, L, 0, H];     % alto dx
-A(804,:) = [804, 0.25, L, 0, H];    % alto sx
-A(805,:) = [805, 0.25, 0, 0, H];    % centro cerchio
-A(806,:) = [806, 0.25, -L, 0, H];   % basso dx
+A(1800,:) = [802, 2*R, -R, 0, H/2.8];    % basso dx
+A(1801,:) = [803, 2*R, R, 0, H/2.8];     % alto dx
+A(1802,:) = [804, 0.25, R, 0, H];        % alto sx
+A(1803,:) = [805, 0.25, 0, 0, H];        % centro cerchio
+A(1804,:) = [806, 0.25, -R, 0, H];       % basso dx
 %--------------------------------------------------------------------------
+
+%% Refinement C-Grid points
+A(1900,:) = [1900, 1.7*R, -2*Rref, 0, 3.5*Href];    % basso dx
+A(1901,:) = [1901, 1.7*R, R, 0, 3.5*Href];     % alto dx
+A(1902,:) = [1902, 0.25, R, 0, Href];        % alto sx
+A(1903,:) = [1903, 0.25, 0, 0, Href];        % centro cerchio
+A(1904,:) = [1904, 0.25, -Rref, 0, Href];       % basso dx
+
 
 %% Printing
 % GMSH geometry file is stored as .geo file

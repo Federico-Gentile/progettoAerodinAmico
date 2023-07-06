@@ -37,7 +37,7 @@ function [data_airfoil] = airfoilCoordinates(x, h_mesh)
 
 % Airfoil GRID and MESH SIZE
 x_airfoil = readmatrix("coordinates/x_coordinates_airfoil.txt");
-h_airfoil = h_mesh.*readmatrix("coordinates/h_coordinates_airfoil.txt");
+h_airfoil = h_mesh.*(0.2+0.8.*readmatrix("coordinates/h_coordinates_airfoil.txt"));
 
 % % % Warning for incorrect number of grid points
 % % if length(x_airfoil)~=801 || length(h_airfoil)~=801
@@ -80,7 +80,7 @@ y_l = -(1/2).*t_igp(x_l);  % y negative (t/2)
 
 data_airfoil.x = [x_u;x_l];  
 data_airfoil.y = [y_u;y_l];
-data_airfoil.h = h_airfoil;
+data_airfoil.h_vect = h_airfoil;
 
 figure()
 plot(data_airfoil.x, data_airfoil.y,'ok','MarkerSize',4)
