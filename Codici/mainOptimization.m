@@ -11,11 +11,11 @@ close all
 % lb      = [0.2002 0.0246 0.0026423 0.004465];    
 % ub      = [0.4813 0.3227 0.67179   2.71165];
 
-
+addpath('XFOIL')
 % Lower and Upper boundary proposed by S.Bortolotti
-
+system('')
 lb      = [0.21 0.07 0.290  0.5];    
-ub      = [0.4  0.25    0.9   3; 
+ub      = [0.4  0.25    0.9   3]; 
 nvars   = 4; 
 
 %% Optimization cycle

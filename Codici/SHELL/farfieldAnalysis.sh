@@ -10,7 +10,7 @@
 # export PATH=$PATH:$ProgettoAerodinAmico
 
 # Test C#
-testNumber=1
+testNumber=3
 
 # Index of the mesh that starts the sweep
 meshIndexes=("1" "2" "3" "4" "5" "6")
