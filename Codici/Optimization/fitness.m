@@ -7,11 +7,12 @@ delete *.dat
 delete *.vtu
 delete *.geo
 delete *.su2
-delete xfoil_input.txt
+delete *.txt
 
 
 addpath("configFiles")
 addpath("functions")
+addpath(genpath("XFOIL"))
 %% Data
 rho     = 1.225;
 chord   = 0.537;
@@ -37,18 +38,20 @@ fid = fopen('xfoil_input.txt','w');
 fprintf(fid, 'load rootAirfoil.txt\n');
 fprintf(fid, 'pane\n');
 fprintf(fid, 'ppar\n');
-fprintf(fid, 'N 200\n');
-fprintf(fid, '\n\n');
+fprintf(fid, 'N 200\n\n\n');
 fprintf(fid, 'gdes\n');
 fprintf(fid, 'tgap\n');
 fprintf(fid, '0.01\n');
-fprintf(fid, '0.1\n\n');
+fprintf(fid, '0.3\n\n');
+fprintf(fid, 'pane\n');
+fprintf(fid, 'ppar\n');
+fprintf(fid, 'N 210\n\n\n');    
 fprintf(fid, 'oper\n');
 fprintf(fid, 'visc on\n');
 fprintf(fid, '6e6\n');
 fprintf(fid,'iter 200\n');
 machVecRoot = [0.1 0.2 0.3 0.4 0.5];
-alphaVecRoot = 0:1:20;
+alphaVecRoot = 0:0.5:20;
 ClRoot = zeros(length(machVecRoot), length(alphaVecRoot));
 CdRoot = zeros(length(machVecRoot), length(alphaVecRoot));
 CmRoot = zeros(length(machVecRoot), length(alphaVecRoot));
@@ -59,7 +62,7 @@ for ii = 1:length(machVecRoot)
         fprintf(fid, "mach " + num2str(machVecRoot(ii)) + "\n");
         fprintf(fid,'pacc\n');
         fprintf(fid,'polar.txt\n\n');
-        fprintf(fid,'aseq 0 20 1\n');
+        fprintf(fid,'aseq 0 20 0.5\n');
         s_xfoil  = readlines('xfoil_input.txt');
         ind_re   = find(strncmp(s_xfoil, 're', 2));
         ind_mach = find(strncmp(s_xfoil, 'mach', 4)); 
@@ -69,7 +72,7 @@ for ii = 1:length(machVecRoot)
         s_xfoil{ind_mach} = ['mach ' num2str(machVecRoot(ii))];
         writelines(s_xfoil, "xfoil_input.txt")
     end    
-    system('xfoil.exe < xfoil_input.txt; exit')
+    system('.\XFOIL\xfoil.exe < xfoil_input.txt; exit')
     % Extract data from polar.txt
     polar = readmatrix('polar.txt');
     ClRoot(ii,:) = polar(:,2)';
