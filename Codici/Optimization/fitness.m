@@ -25,9 +25,9 @@ mu      = 1.8*1e-5;
 % % % ρ0_nd ∈ [0.29, 0.9]
 % % % βT_nd E ∈ [0.5, 3]
 % x = [0.21 0.25 0.290  3]; % profilo ape maia per test codice
-% x = [0.21 0.25 0.290 0.5]; % profilo goccia 1
+ x = [0.21 0.25 0.290 0.5]; % profilo goccia 1
 % x = [0.4 0.25 0.290 0.5]; % profilo goccia 2
-x = [0.3 0.12 0.4322 2.022];  % simile al NACA0012
+% x = [0.3 0.12 0.4322 2.022];  % simile al NACA0012
 
 %% Blade root coefficients evaluation (XFOIL)
 % Airfoil creation
@@ -55,6 +55,7 @@ alphaVecRoot = 2:0.5:20;
 ClRoot = zeros(length(machVecRoot), length(alphaVecRoot));
 CdRoot = zeros(length(machVecRoot), length(alphaVecRoot));
 CmRoot = zeros(length(machVecRoot), length(alphaVecRoot));
+ncorr  = zeros(length(machVecRoot), 1);   % Keep track of polar correction for each Mach number
 for ii = 1:length(machVecRoot)
     Re = rho * chord * machVecRoot(ii) * soundSpeed / mu;
     if ii == 1
@@ -76,22 +77,47 @@ for ii = 1:length(machVecRoot)
     system('.\XFOIL\xfoil.exe < xfoil_input.txt; exit')
     % Extract data from polar.txt
     polar = readmatrix('polar.txt');
+    % Check if the XFOIL reached convergence for every tested AOA
+    % AT THE MOMENT THIS PIECE OF CODE DOES NOT WORK IF THERE ARE 2
+    % CONSECUTIVE NOT CONVERGED ANGLES.
     if size(polar,1) ~= length(alphaVecRoot)
+        % Creating the corrected polar, which filles the non converged rows
+        % of the polar with a in interpolation of the neighbours values
         polar_corrected = zeros(length(alphaVecRoot),size(polar,2));
-        ncorr = 0;   % number of corrections
+        % For loop to find the non converged cases
         for kk = 1:length(alphaVecRoot)
-           if polar(kk-ncorr,1) ~= alphaVecRoot(kk)     
-               ncorr = ncorr + 1;
-               polar_corrected(kk, 1) = alphaVecRoot(kk);
-               if kk > 1
-                    polar_corrected(kk, 2:end) = (polar(kk,2:end) + polar(kk-1,2:end))/2;
-                    
-               else
-                    polar_corrected(kk, 2:end) = polar(kk,2:end);
-               end
-           else
-               polar_corrected(kk, :) = polar(kk-ncorr,:);
-           end
+            % Particular case: update of the number of corrections when the
+            % last angle did not converged
+            if kk == length(alphaVecRoot) && ncorr(ii) ~= (length(alphaVecRoot) - size(polar, 1))
+                ncorr(ii) = ncorr(ii) + 1;
+            end
+            % If the non converged angle is found
+            if polar(kk-ncorr(ii),1) ~= alphaVecRoot(kk)
+                % The angle of polar corrected is set to the right one.
+                polar_corrected(kk, 1) = alphaVecRoot(kk);
+                % Particular case: the first angle did not converge
+                if kk == 1
+                     % We put the value of the successive angle
+                     polar_corrected(kk, 2:end) = polar(kk,2:end);  
+                % Particular case: the last angle di not converge
+                elseif kk == length(alphaVecRoot)
+                     % We put the value of the second to last angle
+                     polar_corrected(kk, 2:end) = polar(kk-ncorr(ii),2:end); 
+                else
+                     % Every other case
+                     polar_corrected(kk, 2:end) = (polar(kk-ncorr(ii),2:end) + polar(kk-1-ncorr(ii),2:end))/2;
+                end
+                % If you are not at the last angle update the number of
+                % correction
+                if kk ~= length(alphaVecRoot)
+                     ncorr(ii) = ncorr(ii) + 1;
+                end
+            else
+                % If the current angle is converged, simply copy the polar
+                % value
+                polar_corrected(kk, :) = polar(kk-ncorr(ii),:);
+            end
+            
         end
         ClRoot(ii,:) = polar_corrected(:,2)';
         CdRoot(ii,:) = polar_corrected(:,3)';
