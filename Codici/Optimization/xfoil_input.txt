@@ -11,16 +11,17 @@ tgap
 
 pane
 ppar
-N 350
+N 210
 
 
 oper
 visc on
 6e6
 iter 200
-re 1242558.3333
-mach 0.1
+re 6212791.6667
+mach 0.5
+a 0
 pacc
 polar.txt
 
-aseq 0 20 0.5
+aseq 2 20 0.5

@@ -79,28 +79,22 @@ for ii = 1:length(machVecRoot)
     if size(polar,1) ~= length(alphaVecRoot)
         polar_corrected = zeros(length(alphaVecRoot),size(polar,2));
         ncorr = 0;   % number of corrections
-        for kk = 1:length(alphaVecRoot)
-           if polar(kk-ncorr,1) ~= alphaVecRoot(kk)     
-               ncorr = ncorr + 1;
-               polar_corrected(kk, 1) = alphaVecRoot(kk);
+        for kk = 1:size(polar,1)
+           if polar(kk,1) ~= alphaVecRoot(kk+ncorr)     
+               polar_corrected(kk+ncorr, 1) = alphaVecRoot(kk+ncorr);
                if kk > 1
                     polar_corrected(kk, 2:end) = (polar(kk,2:end) + polar(kk-1,2:end))/2;
                     
                else
                     polar_corrected(kk, 2:end) = polar(kk,2:end);
                end
-           else
-               polar_corrected(kk, :) = polar(kk-ncorr,:);
            end
         end
-        ClRoot(ii,:) = polar_corrected(:,2)';
-        CdRoot(ii,:) = polar_corrected(:,3)';
-        CmRoot(ii,:) = polar_corrected(:,5)';
-    else
-        ClRoot(ii,:) = polar(:,2)';
-        CdRoot(ii,:) = polar(:,3)';
-        CmRoot(ii,:) = polar(:,5)';
+
     end
+    ClRoot(ii,:) = polar(:,2)';
+    CdRoot(ii,:) = polar(:,3)';
+    CmRoot(ii,:) = polar(:,5)';
     % Delete current polar.txt
     delete polar.txt    
 end
