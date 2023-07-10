@@ -5,11 +5,10 @@ addpath('Scripts');
 %% User Defined Template
 
 % Template Name 
-templateTest;
+C4_RANS;
 
 % Figure options
 opts.plotFigure = 1;
-opts.saveFigure = 0;
 
 % Graphical options
 
@@ -20,9 +19,6 @@ dataProcessing;
 %% Plot section
 if opts.plotFigure
     plotFigure;
-    if opts.saveFigure
-        %
-    end
 end
 
 

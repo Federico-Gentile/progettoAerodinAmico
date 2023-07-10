@@ -14,7 +14,7 @@ for jj = 1:nQOIs
 
     % Initializing outputs
     results.(template.QOIsNames(jj)) = array2table(NaN(nAnalyses,7));
-    results.(template.QOIsNames(jj)).Properties.VariableNames = ["p", "Richardson Extrapolation", "GCI fine", "GCI coarse", "Check", "Fsolve exitFlag", "Residual"];
+    results.(template.QOIsNames(jj)).Properties.VariableNames = ["p", "Richardson Extrapolation", "GCI fine %", "GCI coarse %", "Check", "Fsolve exitFlag", "Residual"];
 
     for ii = 1:nAnalyses
 

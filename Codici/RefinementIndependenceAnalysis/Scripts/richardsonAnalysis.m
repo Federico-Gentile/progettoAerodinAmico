@@ -21,8 +21,8 @@ options = optimoptions('fsolve', 'Display', 'off');
 ext21 = f1 + ( f1 - f2) / (r21^p - 1);
 
 % GCIs of the two finest grids
-GCI21 = SF * abs( (f1 - f2) / (f1 * (r21^p - 1) ) );
-GCI32 = SF * abs( (f2 - f3) / (f2 * (r32^p - 1) ) ) ;
+GCI21 = SF * abs( (f1 - f2) / (f1 * (r21^p - 1) ) ) * 100;
+GCI32 = SF * abs( (f2 - f3) / (f2 * (r32^p - 1) ) ) * 100;
 
 % Computing final check
 check = GCI32 / (GCI21 * r21^p);
