@@ -10,9 +10,10 @@ function [] = geoCreationRefBox(x,h,R,BL)
 
 %% FOR TESTING ONLY
     h = 0.0015;
+    % 0.009871875 0.00658125 0.0043875 0.002925 0.00195 0.0015
     % 10 15 20 25 30 35
     R = 60;
-    BL = 1;
+    BL = 0;
     % x = [XT,T,rho0,betaTE]
     % Upper and lower limits proposed by S. Bortolotti thesis
     % % % XT ∈ [0.21, 0.4]
