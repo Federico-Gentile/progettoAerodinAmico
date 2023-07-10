@@ -1,5 +1,5 @@
 
-function [data_airfoil] = airfoilCoordinates(x, h_mesh)
+function [data_airfoil] = airfoilCoordinatesCFD(x, h_mesh)
 
 % NOTE:
 % data_airfoil deve contenere 801 coordinate x,y dei punti del profilo
@@ -36,8 +36,8 @@ function [data_airfoil] = airfoilCoordinates(x, h_mesh)
 %--------------------------------------------------------------------------
 
 % Airfoil GRID and MESH SIZE
-x_airfoil = readmatrix("coordinates/x_coordinates_airfoil.txt");
-h_airfoil = h_mesh.*(0.2+0.8.*readmatrix("coordinates/h_coordinates_airfoil.txt"));
+x_airfoil = readmatrix("x_coordinates_airfoil.txt");
+h_airfoil = h_mesh.*(0.2+0.8.*readmatrix("h_coordinates_airfoil.txt"));
 
 % % % Warning for incorrect number of grid points
 % % if length(x_airfoil)~=801 || length(h_airfoil)~=801

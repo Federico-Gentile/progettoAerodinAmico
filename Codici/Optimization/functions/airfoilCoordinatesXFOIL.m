@@ -1,5 +1,5 @@
 
-function [] = airfoilCoordinatesXFOIL(y)
+function [x_coordinates,y_coordinates] = airfoilCoordinatesXFOIL(y)
 % NOTE:
 % y in INPUT deve essere il vettore di 4 parametri per profilo IGP simmetrico
 % Il codice produce un profilo con sharp TE. Quest'ultimo può eventualmente essere rimaneggiato direttamente all'interno di XFOIL
@@ -23,7 +23,7 @@ function [] = airfoilCoordinatesXFOIL(y)
 %--------------------------------------------------------------------------
 
 % Airfoil GRID and MESH SIZE
-x_coordinates_xfoil = readmatrix("coordinates/x_coordinates_xfoil.txt");
+x_coordinates_xfoil = readmatrix("linear_x_coordinates_xfoil.txt");
 %--------------------------------------------------------------------------
 
 %% IGP Parametrization
@@ -49,8 +49,8 @@ t = A\b;
 % Thickness distribution IGP polynomial
 t_igp = @(x) t(1).*(x.^0.5) + t(2).*(x) + t(3).*(x.^2) + t(4).*(x.^3) + t(5).*(x.^4);
 % Airfoil coordinates
-x_u = x_coordinates_xfoil(1:100);    % x dorso
-x_l = x_coordinates_xfoil(101:200);  % x ventre
+x_u = x_coordinates_xfoil(1:99);    % x dorso
+x_l = x_coordinates_xfoil(100:199);  % x ventre
 y_u = (1/2).*t_igp(x_u);             % y positive (t/2)
 y_l = -(1/2).*t_igp(x_l);            % y negative (t/2)
 %--------------------------------------------------------------------------

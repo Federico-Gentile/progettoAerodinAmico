@@ -1,4 +1,4 @@
-%function [] = geoCreationRefBox(x,h,R,BL)
+function [] = geoCreationRefBox(x,h,R,BL)
 % NOTE:
 % iter contiene i_cycle (iterata del ciclo di ottimizzazione) e i_part (indice della particella)
 % data_airfoil deve contenere 801 coordinate x,y dei punti del profilo
@@ -9,9 +9,9 @@
 %--------------------------------------------------------------------------
 
 %% FOR TESTING ONLY
-    h = 0.0025;
+    h = 0.0015;
     % 10 15 20 25 30 35
-    R = 40;
+    R = 60;
     BL = 1;
     % x = [XT,T,rho0,betaTE]
     % Upper and lower limits proposed by S. Bortolotti thesis
@@ -22,7 +22,7 @@
     % x = [0.21 0.25 0.290  3]; % profilo ape maia per test codice
     % x = [0.21 0.25 0.290 0.5]; % profilo goccia 1
     % x = [0.4 0.25 0.290 0.5]; % profilo goccia 2
-    x = [0.3 0.12 0.4322 2.022];  % simile al NACA0012
+    %x = [0.3 0.12 0.4322 2.022];  % simile al NACA0012
     XT = x(1);
     T = x(2);
     rho0_nd = x(3);
@@ -36,13 +36,13 @@
     % BL=1 --> YES
     % BL=0 --> NO
     % First cell size -> may need TUNING according to Y+
-    ss = 0.000003;        % baseline s = 0.000004
+    ss = (3e-6).*(h./0.004388);        % in order to have a y+ = 1 at h=0.004 approsximately
 %--------------------------------------------------------------------------
 
 % 2. Domain independence <-> Grid independence
     % 1 = Domain independence
     % 2 = Grid independence
-    II = 1;
+    II = 2;
 %--------------------------------------------------------------------------
 
 % 3. Fixed h <-> Variable h (Caccia distribution)
@@ -54,18 +54,22 @@
 % 4. TE fan number of elements
     % Baseline is 40
     % For low h, can be increased to 80/100
-    ff = 40;
+    ff = floor(36*(0.0025/h));
 %--------------------------------------------------------------------------
 
 %% C-Grid data are given as INPUT to the function
     % Default values for a baseline smooth grid (coarse, 100'000 elements approx) are the following
     % h      = 0.002;          % Dimension at airfoil
     % R      = 10;             % C-grid farfield dimension
+
+    % For GRID INDEPENDENCE and DOMAIN INDEPENDENCE ONLY! 
     if II == 1
     H = R./15;             % Dimension at farfield for domain ind.
     elseif II == 2
-    H = 400.*h;            % Dimension at farfield for grid ind.
+    H = (R/10).*250.*h;            % Dimension at farfield for grid ind.
     end
+
+    % Other data
     Href   = 13.*h;           % Dimension at refinement box boundary
     Rref   = 0.6;            % C-grid refinement box dimension
 %--------------------------------------------------------------------------
@@ -105,16 +109,16 @@ A(806,:) = [806, 0.25, -R, 0, H];       % basso dx
 %--------------------------------------------------------------------------
 
 %% Refinement C-Grid points
-A(807,:) = [807, 1.7*R, -2*Rref, 0, 3.5*Href];    % basso dx
-A(808,:) = [808, 1.7*R, 2*Rref, 0, 3.5*Href];     % alto dx
-A(809,:) = [809, 0.25, Rref, 0, Href];            % alto sx
-A(810,:) = [810, 0.25, 0, 0, Href];               % centro cerchio
-A(811,:) = [811, 0.25, -Rref, 0, Href];           % basso dx
+A(807,:) = [807, 1.7*R, -R/3, 0, H/5];    % basso dx
+A(808,:) = [808, 1.7*R, R/3, 0, H/5];     % alto dx
+A(809,:) = [809, 0, Rref, 0, Href];            % alto sx
+A(810,:) = [810, 0, 0, 0, Href];               % centro cerchio
+A(811,:) = [811, 0, -Rref, 0, Href];           % basso dx
 
 
 %% Printing
 % GMSH geometry file is stored as .geo file
-fileID = fopen('meshG7.geo','w');
+fileID = fopen('meshG25.geo','w');
 
 % Scrittura di tutti i punti airfoil + C-grid
 for i=1:size(A,1)
