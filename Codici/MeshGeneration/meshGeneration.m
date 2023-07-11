@@ -1,6 +1,7 @@
 clear; close all; clc;
 addpath('../Optimization/functions');
 
+% Mesh Generation User Defined Options
 opts.meshEnumerationStartIndex = 26;
 opts.meshTypeFlag = "RANS";
 opts.x = [0.3 0.12 0.4322 2.022];  % simile al NACA0012
@@ -16,58 +17,31 @@ end
 
 counter = 0;
 for h = opts.hList
+
+    % Updating mesh counter
     counter = counter + 1;
-    geoMeshName = strcat('meshG',num2str(opts.meshEnumerationStartIndex+counter,'%i'),'.geo');
 
-    geoCreationRefBox(opts.x,h,opts.R,opts.BL,geoMeshName)
-
-    meshCommand = "gmsh -format su2 " + geoMeshName + " -2";
-
-    % Launch WSL and execute the command
-    [status, result] = system('wsl ' + meshCommand);
-    % Check the status and display the result
-    if status == 0
-        disp('WSL commands executed successfully.');
-        disp('Output:');
-        disp(result);
-    else
-        disp('Failed to execute WSL commands.');
-        disp('Error message:');
-        disp(result);
-    end
-    
+    % Defining mesh name
     folderName = strcat('meshG',num2str(opts.meshEnumerationStartIndex+counter,'%i'));
     su2MeshName = strcat('meshG',num2str(opts.meshEnumerationStartIndex+counter,'%i'),'.su2');
-    [status, result] = system('wsl mkdir outputMeshes/' + opts.meshTypeFlag + '/' + folderName);
-    if status == 0
-        disp('WSL commands executed successfully.');
-        disp('Output:');
-        disp(result);
-    else
-        disp('Failed to execute WSL commands.');
-        disp('Error message:');
-        disp(result);
-    end
-    [status, result] = system('wsl mv ' + geoMeshName + ' outputMeshes/' + opts.meshTypeFlag + '/' + folderName);
-    if status == 0
-        disp('WSL commands executed successfully.');
-        disp('Output:');
-        disp(result);
-    else
-        disp('Failed to execute WSL commands.');
-        disp('Error message:');
-        disp(result);
-    end
-    [status, result] = system('wsl mv ' + su2MeshName + ' outputMeshes/' + opts.meshTypeFlag + '/' + folderName);
-    if status == 0
-        disp('WSL commands executed successfully.');
-        disp('Output:');
-        disp(result);
-    else
-        disp('Failed to execute WSL commands.');
-        disp('Error message:');
-        disp(result);
-    end
+    geoMeshName = strcat('meshG',num2str(opts.meshEnumerationStartIndex+counter,'%i'),'.geo');
+    
+    % Generating .geo file
+    geoCreationRefBox(opts.x,h,opts.R,opts.BL,geoMeshName)
 
+    % Generating .su2 file
+    meshCommand = "gmsh -format su2 " + geoMeshName + " -2";
+
+    [status, ~] = system('wsl ' + meshCommand);
+    check(status);
+    
+    [status, ~] = system('wsl mkdir outputMeshes/' + opts.meshTypeFlag + '/' + folderName);
+    check(status);
+
+    [status, ~] = system('wsl mv ' + geoMeshName + ' outputMeshes/' + opts.meshTypeFlag + '/' + folderName);
+    check(status);
+
+    [status, ~] = system('wsl mv ' + su2MeshName + ' outputMeshes/' + opts.meshTypeFlag + '/' + folderName);
+    check(status);
 
 end
