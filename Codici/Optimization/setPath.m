@@ -5,7 +5,7 @@
 % SU2_RUNS add
 
 % setenv('PATH', [getenv('PATH') ';\\wsl.localhost\Ubuntu\home\fede\Codes\SU2_bin\bin'])
-setenv('PATH', [getenv('PATH') ';\\wsl.localhost\Ubuntu\home\matteodallo\cfd\SU2_bin\bin'])
+setenv('PATH', [getenv('PATH') ';\\wsl.localhost\Ubuntu\home\matteo\codes\su2\SU2_bin\bin'])
 
 % gmsh add
 % setenv('PATH', [getenv('PATH') ';\\wsl.localhost\Ubuntu\home\fede\Codes\gmsh-4.10.5-Linux64\bin'])

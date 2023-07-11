@@ -1,4 +1,4 @@
-function [] = geoCreationRefBox(x,h,R,BL)
+function [] = geoCreationRefBox(x,h,R,BL,meshName)
 % NOTE:
 % iter contiene i_cycle (iterata del ciclo di ottimizzazione) e i_part (indice della particella)
 % data_airfoil deve contenere 801 coordinate x,y dei punti del profilo
@@ -9,11 +9,11 @@ function [] = geoCreationRefBox(x,h,R,BL)
 %--------------------------------------------------------------------------
 
 %% FOR TESTING ONLY
-    h = 0.0015;
+%     h = 0.0015;
     % 0.009871875 0.00658125 0.0043875 0.002925 0.00195 0.0015
     % 10 15 20 25 30 35
-    R = 60;
-    BL = 0;
+%     R = 60;
+%     BL = 1;
     % x = [XT,T,rho0,betaTE]
     % Upper and lower limits proposed by S. Bortolotti thesis
     % % % XT ∈ [0.21, 0.4]
@@ -116,10 +116,15 @@ A(809,:) = [809, 0, Rref, 0, Href];            % alto sx
 A(810,:) = [810, 0, 0, 0, Href];               % centro cerchio
 A(811,:) = [811, 0, -Rref, 0, Href];           % basso dx
 
+%% Refinement for Shock points
+A(812,:) = [812, 0.07, 0.034, 0, Href/20];    % basso sx
+A(813,:) = [813, 0.23, 0.0343, 0, Href/20];      % basso dx
+A(814,:) = [814, 0.23, 0.327, 0, Href/20];     % alto dx
+A(815,:) = [815, 0.07, 0.327, 0, Href/20];       % alto sx
 
 %% Printing
 % GMSH geometry file is stored as .geo file
-fileID = fopen('meshG25.geo','w');
+fileID = fopen(meshName,'w');
 
 % Scrittura di tutti i punti airfoil + C-grid
 for i=1:size(A,1)
@@ -144,6 +149,13 @@ fprintf(fileID,'Line(16)={808,809};\n');
 fprintf(fileID,'Circle(17)={809,810,811};\n');
 fprintf(fileID,'Line(18)={811,807};\n');
 
+
+% Scrittura delle linee della refbox per la shock (Ref. Box)
+fprintf(fileID,'Line(19)={812,813};\n');
+fprintf(fileID,'Line(20)={813,814};\n');
+fprintf(fileID,'Line(21)={814,815};\n');
+fprintf(fileID,'Line(22)={815,812};\n');
+
 % Scrittura dei loop
 % Interno (Airfoil)
 fprintf(fileID,'Line Loop(1)={1,2,3,4};\n');
@@ -151,6 +163,8 @@ fprintf(fileID,'Line Loop(1)={1,2,3,4};\n');
 fprintf(fileID,'Line Loop(2)={15,16,17,18};\n');
 % Farfield (C-grid)
 fprintf(fileID,'Line Loop(3)={5,6,7,8};\n');
+% Ref. Box. (x shock)
+fprintf(fileID,'Line Loop(4)={19,20,21,22};\n');
 
 if BL == 1
 fprintf(fileID,'Field[1]=BoundaryLayer;\n');
