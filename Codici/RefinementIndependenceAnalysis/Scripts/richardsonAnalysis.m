@@ -18,7 +18,7 @@ options = optimoptions('fsolve', 'Display', 'off');
 [p, eqnVal, exitFlag] = fsolve(eqn, 1, options);
 
 % Richardson extrapolation
-ext21 = f1 + ( f1 - f2) / (r21^p - 1);
+ext21 = f1 + (f1 - f2) / (r21^p - 1);
 
 % GCIs of the two finest grids
 GCI21 = SF * abs( (f1 - f2) / (f1 * (r21^p - 1) ) ) * 100;

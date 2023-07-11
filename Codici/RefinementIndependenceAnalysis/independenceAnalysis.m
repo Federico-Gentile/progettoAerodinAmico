@@ -5,7 +5,7 @@ addpath('Scripts');
 %% User Defined Template
 
 % Template Name 
-C4_RANS;
+C1_RANS;
 
 % Figure options
 opts.plotFigure = 1;
