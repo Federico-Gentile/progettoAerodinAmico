@@ -15,12 +15,13 @@ template.inputMatrix = [    0.925794346	0.075885692	-0.05164316
                             0.811879118	0.071409287	-0.043082986 ];
 
 % meshH contains one column: h, the average element size of each mesh
-template.meshH = [ 0.864617131
-                   0.635672433
-                   0.459165664
-                   0.32671019
-                   0.229748944
-                   0.181691797 ];
+template.meshH = [ 1.300865487
+                    0.887996175
+                    0.596127935
+                    0.39821364
+                    0.265880414
+                    0.205049156
+                     ];
 
 % Richardson safety factor for GCI estimation
 template.SF = 1.25;
