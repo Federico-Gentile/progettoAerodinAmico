@@ -1,9 +1,9 @@
 function [structure, Data] = structureElasticModel(Data)
 
-% Grid Definition
+% Grid Definitionc
 x = (0:1/Data.n_elem_f:1)*(Data.pitch_bearing-Data.flap_hinge_axis)+Data.flap_hinge_axis;
-xb = 0.610/(Data.blade_radius-Data.pitch_bearing);
-x = [x, (xb:(1-xb)/Data.n_elem_b:1)*(Data.blade_radius-Data.pitch_bearing)+Data.pitch_bearing];
+xb = 0.610/(Data.R-Data.pitch_bearing);
+x = [x, (xb:(1-xb)/Data.n_elem_b:1)*(Data.R-Data.pitch_bearing)+Data.pitch_bearing];
 
 % Retrieve Bending Stiffness and mass distribution from datas
 [EJ_el, x_el] = w_interpolate(Data.blade_data(:,1), Data.blade_data(:,7), x); 
@@ -16,7 +16,7 @@ EJ_el = Data.elastic_model_stiffness_factor*EJ_el;
 cdofs = 1;
 
 % Compute non rotating bending modes
-[fb, Modesw, Modeswp] = FEM_beam_bending(x/Data.blade_radius, EJ_el(1:2:end), m_el(1:2:end), Data.blade_radius, cdofs, [], Data.n_modb);
+[fb, Modesw, Modeswp] = FEM_beam_bending(x/Data.R, EJ_el(1:2:end), m_el(1:2:end), Data.R, cdofs, [], Data.n_modb);
 
 % Retrieve Torsional Stiffness and moment of inertia distribution from datas
 [GJ_el, x_el] = w_interpolate(Data.blade_data(:,1), Data.blade_data(:,11), x);
@@ -27,7 +27,7 @@ GJ_el(1:2*Data.n_elem_f) = 0*GJ_el(1:2*Data.n_elem_f);
 [xi_el, x_el] = w_interpolate(Data.blade_data(:,1), Data.blade_data(:,4), x); 
 Jcg_el = J_el - m_el.*(xi_el.*Data.c).^2;
 
-xi_el = -1*xi_el.*Data.c + Data.xcg_shift*Data.c - Data.AC{blade}(x_el)*Data.c/2;
+xi_el = -1*xi_el.*Data.c + Data.xcg_shift*Data.c;
 J_el = Jcg_el + m_el.*(xi_el).^2;
 
 % Application of the stiffness increase factor
@@ -38,7 +38,7 @@ cdofs = (1:Data.n_elem_f);                                  % No rotation before
 gdofs = [Data.n_elem_f+1, Data.pitch_link_stiffness*Data.pitch_link_factor];      % Lumped spring at pitch link location (Pitch link factor changes the stiffness of the link)
 
 % Compute non rotating torsional modes
-[ft, Modest] = FEM_beam_torsion(x/Data.blade_radius, GJ_el(1:2:end), J_el(1:2:end), Data.blade_radius, cdofs, gdofs, Data.n_modt);
+[ft, Modest] = FEM_beam_torsion(x/Data.R, GJ_el(1:2:end), J_el(1:2:end), Data.R, cdofs, gdofs, Data.n_modt);
 
 n_mod = Data.n_modb + Data.n_modt;
 K = zeros(n_mod, n_mod);

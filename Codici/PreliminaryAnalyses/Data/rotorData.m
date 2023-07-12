@@ -9,39 +9,40 @@ rotData.GW =52000;                  %GW N
 rotData.MTWO = 74000;               %MTOW N
 rotData.Ad = pi^2 * rotData.R;      %Disk area m^2
 
-if inp.bladeType == 0
+%Blade twist deg
+rotData.rTw = [ 0
+                0.28
+                0.76
+                1.757
+                2.007
+                2.257
+                2.507
+                2.757
+                3.007
+                3.257
+                3.507
+                6.257
+                7.49 ];
 
-    %Blade twist deg
-    rotData.rTw = [ 0
-                    0.28
-                    0.76
-                    1.757
-                    2.007
-                    2.257
-                    2.507
-                    2.757
-                    3.007
-                    3.257
-                    3.507
-                    6.257
-                    7.49 ];
-    
-    rotData.Twi = [ 0
-                    0
-                    0
-                    0
-                    -0.1
-                    -0.3
-                    -0.617
-                    -0.983
-                    -1.283
-                    -1.6
-                    -1.867
-                    -4.8
-                    -6.111 ];
+rotData.Twi = [ 0
+                0
+                0
+                0
+                -0.1
+                -0.3
+                -0.617
+                -0.983
+                -1.283
+                -1.6
+                -1.867
+                -4.8
+                -6.111 ];
 
-elseif inp.bladeType == 1
-
+if max(inp.bladeType) == 1
+    rotData.pitch_link_stiffness = 33032;
+    rotData.pitch_link_factor = 1;
+    rotData.xcg_shift = 0;
+    rotData.elastic_model_stiffness_factor = 1;
     rotData.flap_hinge_axis = 0.289;	        % [m]
     rotData.pitch_link = 0.289;		        % [m]
     rotData.pitch_bearing = 0.432;            % [m]
@@ -52,23 +53,23 @@ elseif inp.bladeType == 1
     rotData.No_c = 8;                         % Number of total coupled modes
 
 
-    Data.blade_cg_offset = [
-                % Radial location	C.G. offset (wrt. quarter chord, positive forward)
-                % r			(x/c)_u(nmodified)
-                % m			adim.
-                0.280			 0.000
-                1.887			 0.000
-                1.887			-0.010
-                7.070			-0.010
-                7.070			 0.030
-                7.390			 0.030
-                7.390			 0.147
-                7.402			 0.147
-                7.402			 0.000
-                7.490			 0.000
-                ];
+    rotData.blade_cg_offset = [
+            % Radial location	C.G. offset (wrt. quarter chord, positive forward)
+            % r			(x/c)_u(nmodified)
+            % m			adim.
+            0.280			 0.000
+            1.887			 0.000
+            1.887			-0.010
+            7.070			-0.010
+            7.070			 0.030
+            7.390			 0.030
+            7.390			 0.147
+            7.402			 0.147
+            7.402			 0.000
+            7.490			 0.000
+            ];
 
-    Data.blade_twist = [
+    rotData.blade_twist = [
         % Radial location	Twist
         % r			Theta_u(nmodified)
         % m			deg
@@ -96,7 +97,7 @@ elseif inp.bladeType == 1
         7.490			-6.117
         ];
         
-    Data.blade_mass = [
+    rotData.blade_mass = [
         % Radial location	Running mass
         % r			m_u(nmodified)
         % m			kg/m
@@ -132,7 +133,7 @@ elseif inp.bladeType == 1
         7.490			 6.930
         ];
         
-    Data.blade_torsional_inertia = [
+    rotData.blade_torsional_inertia = [
         % Radial location	Torsional inertia
         % r			(I_Theta)_u(nmodified)
         % m			kg m
@@ -181,7 +182,7 @@ elseif inp.bladeType == 1
         ];
         
         
-    Data.blade_extensional_stiffness = [
+    rotData.blade_extensional_stiffness = [
         % Radial location	Extensional stiffness
         % r			(EA)_u(nmodified)
         % m			N
@@ -223,7 +224,7 @@ elseif inp.bladeType == 1
         7.490			1.16e8
         ];
         
-    Data.blade_flap_chord_stiffness = [
+    rotData.blade_flap_chord_stiffness = [
         % Radial location	Flap stiffness		Chord stiffness
         % r			(EI_f)_u(nmodified)	(EI_c)_u(nmodified)
         % m			Nm^2			Nm^2
@@ -247,7 +248,7 @@ elseif inp.bladeType == 1
         7.490			  8.20e4		 71.50e4
         ];
         
-    Data.blade_torsional_stiffness = [
+    rotData.blade_torsional_stiffness = [
         % Radial location	Torsional stiffness
         % r			(GJ)_u(nmodified)
         % m			Nm^2
@@ -262,5 +263,182 @@ elseif inp.bladeType == 1
         7.241			  8.70e4
         7.490			  8.70e4
         ];
+
+    blade_data(1, :) = [
+	rotData.blade_twist(1, 1), ...
+	rotData.blade_twist(1, 2), ...
+	rotData.blade_mass(1, 2), ...
+	rotData.blade_cg_offset(1, 2), ...
+	0.,...
+	rotData.blade_extensional_stiffness(1,2),...
+	rotData.blade_flap_chord_stiffness(1,2),...
+	rotData.blade_flap_chord_stiffness(1,3),...
+	0.,...
+	0.,...
+	rotData.blade_torsional_stiffness(1,2),...
+	0., ...
+	0., ...
+	rotData.blade_torsional_inertia(1, 2),...
+	0.,...
+	0.];
+
+BLADE_STATION = 1;
+BLADE_TWIST = 2;
+BLADE_MASS = 3;
+BLADE_CG_Y = 4;
+BLADE_CG_Z = 5;
+BLADE_EA = 6;
+BLADE_EJF = 7;
+BLADE_EJC = 8;
+BLADE_NEU_Y = 9; 
+BLADE_NEU_Z = 10; 
+BLADE_GJ = 11;
+BLADE_EAX_Y = 12;
+BLADE_EAX_Z = 13;
+BLADE_J = 14;
+
+i_blade = 2;
+i_blade_twist = 2;
+i_blade_mass = 2;
+i_blade_cg_offset = 2;
+i_blade_extensional_stiffness = 2;
+i_blade_flap_chord_stiffness = 2;
+i_blade_torsional_stiffness = 2;
+i_blade_torsional_inertia = 2;
+
+while (1)
+	t = [
+		rotData.blade_twist(i_blade_twist, 1), ...
+		rotData.blade_mass(i_blade_mass, 1), ...
+		rotData.blade_cg_offset(i_blade_cg_offset, 1), ...
+		rotData.blade_extensional_stiffness(i_blade_extensional_stiffness, 1), ...
+		rotData.blade_flap_chord_stiffness(i_blade_flap_chord_stiffness, 1), ...
+		rotData.blade_torsional_stiffness(i_blade_torsional_stiffness, 1), ...
+		rotData.blade_torsional_inertia(i_blade_torsional_inertia, 1)];
+	jj = find(t == min(t));
+	j = jj(1);
+	new_x = t(j);
+	blade_data(i_blade, BLADE_STATION) = new_x;
+
+	% twist
+	dx = rotData.blade_twist(i_blade_twist, 1) - rotData.blade_twist(i_blade_twist - 1, 1);
+	d1 = rotData.blade_twist(i_blade_twist, 1) - new_x;
+	d2 = new_x - rotData.blade_twist(i_blade_twist - 1, 1);
+	blade_data(i_blade, BLADE_TWIST) = ([d1 d2]/dx) * rotData.blade_twist(i_blade_twist + [-1, 0], 2);
+	
+	% mass
+	dx = rotData.blade_mass(i_blade_mass, 1) - rotData.blade_mass(i_blade_mass - 1, 1);
+	d1 = rotData.blade_mass(i_blade_mass, 1) - new_x;
+	d2 = new_x - rotData.blade_mass(i_blade_mass - 1, 1);
+	blade_data(i_blade, BLADE_MASS) = ([d1 d2]/dx) * rotData.blade_mass(i_blade_mass + [-1, 0], 2);
+	
+	% cg_offset
+	dx = rotData.blade_cg_offset(i_blade_cg_offset, 1) - rotData.blade_cg_offset(i_blade_cg_offset - 1, 1);
+	d1 = rotData.blade_cg_offset(i_blade_cg_offset, 1) - new_x;
+	d2 = new_x - rotData.blade_cg_offset(i_blade_cg_offset - 1, 1);
+	blade_data(i_blade, BLADE_CG_Y) = ([d1 d2]/dx) * rotData.blade_cg_offset(i_blade_cg_offset + [-1, 0], 2);
+	
+	% extensional_stiffness
+	dx = rotData.blade_extensional_stiffness(i_blade_extensional_stiffness, 1) - rotData.blade_extensional_stiffness(i_blade_extensional_stiffness - 1, 1);
+	d1 = rotData.blade_extensional_stiffness(i_blade_extensional_stiffness, 1) - new_x;
+	d2 = new_x - rotData.blade_extensional_stiffness(i_blade_extensional_stiffness - 1, 1);
+	blade_data(i_blade, BLADE_EA) = ([d1 d2]/dx) * rotData.blade_extensional_stiffness(i_blade_extensional_stiffness + [-1, 0], 2);
+	
+	% flap_chord_stiffness
+	dx = rotData.blade_flap_chord_stiffness(i_blade_flap_chord_stiffness, 1) - rotData.blade_flap_chord_stiffness(i_blade_flap_chord_stiffness - 1, 1);
+	d1 = rotData.blade_flap_chord_stiffness(i_blade_flap_chord_stiffness, 1) - new_x;
+	d2 = new_x - rotData.blade_flap_chord_stiffness(i_blade_flap_chord_stiffness - 1, 1);
+	blade_data(i_blade, BLADE_EJF:BLADE_EJC) = ([d1 d2]/dx) * rotData.blade_flap_chord_stiffness(i_blade_flap_chord_stiffness + [-1, 0], 2:3);
+	
+	% torsional_stiffness
+	dx = rotData.blade_torsional_stiffness(i_blade_torsional_stiffness, 1) - rotData.blade_torsional_stiffness(i_blade_torsional_stiffness - 1, 1);
+	d1 = rotData.blade_torsional_stiffness(i_blade_torsional_stiffness, 1) - new_x;
+	d2 = new_x - rotData.blade_torsional_stiffness(i_blade_torsional_stiffness - 1, 1);
+	blade_data(i_blade, BLADE_GJ) = ([d1 d2]/dx) * rotData.blade_torsional_stiffness(i_blade_torsional_stiffness + [-1, 0], 2);
+	
+	% torsional_inertia
+	dx = rotData.blade_torsional_inertia(i_blade_torsional_inertia, 1) - rotData.blade_torsional_inertia(i_blade_torsional_inertia - 1, 1);
+	d1 = rotData.blade_torsional_inertia(i_blade_torsional_inertia, 1) - new_x;
+	d2 = new_x - rotData.blade_torsional_inertia(i_blade_torsional_inertia - 1, 1);
+	blade_data(i_blade, BLADE_J) = ([d1 d2]/dx) * rotData.blade_torsional_inertia(i_blade_torsional_inertia + [-1, 0], 2);
+
+	% end loop
+	if (new_x == rotData.R)
+		break;
+	end
+	
+	% copy the previous line
+	blade_data(i_blade + 1, :) = blade_data(i_blade, :);
+
+	% change only the required values
+	for k = 1:length(jj)
+		if (jj(k) == 1)
+			blade_data(i_blade + 1, BLADE_TWIST) = rotData.blade_twist(i_blade_twist + 1, 2);
+			i_blade_twist = i_blade_twist + 2;
+
+		elseif (jj(k) == 2)
+			blade_data(i_blade + 1, BLADE_MASS) = rotData.blade_mass(i_blade_mass + 1, 2);
+			i_blade_mass = i_blade_mass + 2;
+
+		elseif (jj(k) == 3)
+			blade_data(i_blade + 1, BLADE_CG_Y) = rotData.blade_cg_offset(i_blade_cg_offset + 1, 2);
+			i_blade_cg_offset = i_blade_cg_offset + 2;
+
+		elseif (jj(k) == 4)
+			blade_data(i_blade + 1, BLADE_EA) = rotData.blade_extensional_stiffness(i_blade_extensional_stiffness + 1, 2);
+			i_blade_extensional_stiffness = i_blade_extensional_stiffness + 2;
+
+		elseif (jj(k) == 5)
+			blade_data(i_blade + 1, BLADE_EJF:BLADE_EJC) = rotData.blade_flap_chord_stiffness(i_blade_flap_chord_stiffness + 1, 2:3);
+			i_blade_flap_chord_stiffness = i_blade_flap_chord_stiffness + 2;
+
+		elseif (jj(k) == 6)
+			blade_data(i_blade + 1, BLADE_GJ) = rotData.blade_torsional_stiffness(i_blade_torsional_stiffness + 1, 2);
+			i_blade_torsional_stiffness = i_blade_torsional_stiffness + 2;
+
+		elseif (jj(k) == 7)
+			blade_data(i_blade + 1, BLADE_J) = rotData.blade_torsional_inertia(i_blade_torsional_inertia + 1, 2);
+			i_blade_torsional_inertia = i_blade_torsional_inertia + 2;
+		end
+	end
+	i_blade = i_blade + 2;
+end
+ 
+rotData.name = {'Station',
+	'Twist',
+	'Mass',
+	'CG Position Y',
+	'CG Position Z',
+	'EA',
+	'EJ Flap',
+	'EJ Lag',
+	'Neutral axis Y',
+	'Neutral axis Z',
+	'GJ',
+	'Elastic axis Y',
+	'Elastic axis Z',
+	'Torsional inertia J',
+	'alpha',
+	'beta'};
+
+rotData.Units = {'m'
+	'deg'
+	'kg/m'
+	'y/c adim.'
+	'z/c adim.'
+	'N'
+	'N m2'
+	'N m2'
+	'y/c adim.'
+	'z/c adim.'
+	'N m2'
+	'y/c adim.'
+	'z/c adim.'
+	'kg m'
+	'deg'
+	'deg'};
+
+rotData.blade_data = blade_data;
+
 
 end
