@@ -1,5 +1,4 @@
 clear; close all; clc;
-addpath('Functions\');
 
 %% User defined inputs
 
@@ -7,7 +6,7 @@ addpath('Functions\');
 inp.collList = [ 14 14 15.3 15.3 16.6 16.6 18 18];
 
 % Blade type (0 rigid, 1 elastic)
-inp.bladeType = [0 0 0 0 0 0 0 0 ]';
+inp.bladeType = [0 0 0 0 0 0 0 0 ];
 
 % Importing environment and rotor data
 addpath('Data/');
@@ -46,10 +45,9 @@ for ii = 1:length(inp.collList)
         currFieldName = currFieldName + "i";
         % Computing inflow
         if inp.bladeType == 0
-            currFieldName = currFieldName + "r";
-            ftozero = @(vi) solveRigidRotor(vi, 0, currColl, inp, ambData, rotData, aeroData);
+            currFieldName
+            ftozero = @(vi) solveRotor(vi, 0, currColl, inp, ambData, rotData, aeroData);
         elseif inp.bladeType == 1
-            currFieldName = currFieldName + "e";
             % QUI ELASTICO
         end
         [currVi, ~, exitFlag] = fsolve(ftozero, inp.vi(ii), inp.options);
@@ -66,10 +64,8 @@ for ii = 1:length(inp.collList)
     else
         % Applying user defined inflow
         if inp.bladeType == 0
-            currFieldName = currFieldName + "r";
             [f, out] = solveRigidRotor(inp.vi(ii), 1, currColl, inp, ambData, rotData, aeroData);
         elseif inp.bladeType == 1
-            currFieldName = currFieldName + "e";
             % QUI ELASTICO
         end
         out.f = f;
@@ -86,8 +82,8 @@ for ii = 1:length(inp.collList)
 
 end
 
-outTab = array2table([Tvec, Qvec, Pvec, inp.inflowType, viVec, inp.bladeType]);
-outTab.Properties.VariableNames = ["T [N]", "Q [Nm]", "P [hp]", "Real Infl?", "v_i [m/s]", "Elas?"];
+outTab = array2table([Tvec, Qvec, Pvec, inp.inflowType, viVec, ]);
+outTab.Properties.VariableNames = ["T [N]", "Q [Nm]", "P [hp]", "Real Infl?", "v_i [m/s]"];
 outTab.Properties.RowNames = rowNames;
 outTab %#ok<NOPTS> 
 

@@ -1,4 +1,4 @@
-function [f, out] = solveRotor(vi, outFlag, currColl, inp, ambData, rotData, aeroData)
+function [f, out] = solveRigidRotor(vi, outFlag, currColl, inp, ambData, rotData, aeroData)
 %SOLVEROTOR solves rotor induced velocity problem
 
 % Definition of mach at query points [-]
