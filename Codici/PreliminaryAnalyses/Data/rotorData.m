@@ -47,10 +47,10 @@ if max(inp.bladeType) == 1
     rotData.pitch_link = 0.289;		        % [m]
     rotData.pitch_bearing = 0.432;            % [m]
     rotData.n_elem_f = 5;                     % Number of grid points between flap hinge and pitch bearing
-    rotData.n_elem_b = 75;                    % Number of point after pitch bearing
-    rotData.n_modb = 6;                       % Number of bending modes           
-    rotData.n_modt = 6;                       % Number of torsional modes
-    rotData.No_c = 8;                         % Number of total coupled modes
+    rotData.n_elem_b = 105;                    % Number of point after pitch bearing
+    rotData.n_modb = 8;                       % Number of bending modes           
+    rotData.n_modt = 8;                       % Number of torsional modes
+    rotData.No_c = 10;                         % Number of total coupled modes
 
 
     rotData.blade_cg_offset = [

@@ -43,9 +43,11 @@ if outFlag
 
     out.cl = cl;
     out.cd = cd;
+    out.cm = diag(interp2(aeroData.mach_cm, aeroData.angle_cm,  aeroData.cm, mach', alpha));
 
     out.L = L;
     out.D = D;
+    out.M = 0.5 * ambData.rho * u.^2 .* rotData.c .* out.cm;
 
     out.Fz = Fz;
     out.Fx = L.*sin(aIndu*pi/180) + D.*cos(aIndu*pi/180);

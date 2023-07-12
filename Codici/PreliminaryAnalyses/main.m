@@ -4,10 +4,10 @@ addpath('Functions\');
 %% User defined inputs
 
 % Blade root collectives list [deg]
-inp.collList = [ 14 14 16 16 18 18 ];
+inp.collList = [ 14 14 ];
 
 % Blade type (0 rigid, 1 elastic)
-inp.bladeType = [ 0 1 0 1 0 1 ]';
+inp.bladeType = [ 0 1 ]';
 
 % Importing environment and rotor data
 addpath('Data/');
@@ -19,8 +19,8 @@ inp.aeroDataset = 'naca0012_CFD.mat';
 importAero;
 
 % Inflow type (0 fixed, 1 variable), value in [m/s]
-inp.inflowType = [ 1 1 1 1 1 1 ]';
-inp.vi = [ 10.97 10.97 10.97 10.97 10.97 10.97 ]; 
+inp.inflowType = [ 1 1 ]';
+inp.vi = [ 10.97 10.97 ]; 
 inp.options = optimoptions('fsolve', 'Display', 'off');
 
 % Number of sections along the blade for loads computation (for rigid
@@ -51,7 +51,7 @@ clearvars -except inp rotData ambData aeroData structure
 
 % Initializing outputs
 results = struct();
-[Tvec, Qvec, Pvec, viVec] = deal(zeros(length(inp.collList),1));
+[Tvec, Qvec, Pvec, viVec, timeVec] = deal(zeros(length(inp.collList),1));
 
 for ii = 1:length(inp.collList)
     currColl = inp.collList(ii);
@@ -62,20 +62,19 @@ for ii = 1:length(inp.collList)
         % Computing inflow
         if inp.bladeType(ii) == 0
             currFieldName = currFieldName + "r";
-            ftozero = @(vi) solveRigidRotor(vi, 0, currColl, inp, ambData, rotData, aeroData);
+            ftozero = @(vi, outFlag) solveRigidRotor(vi, outFlag, currColl, inp, ambData, rotData, aeroData);
         elseif inp.bladeType(ii) == 1
             currFieldName = currFieldName + "e";
-            ftozero = @(vi) solveElasticRotor(vi, 0, currColl, inp, ambData, rotData, aeroData, structure);
+            ftozero = @(vi, outFlag) solveElasticRotor(vi, outFlag, currColl, inp, ambData, rotData, aeroData, structure);           
         end
-        [currVi, ~, exitFlag] = fsolve(ftozero, inp.vi(ii), inp.options);
+        tic
+        [currVi, ~, exitFlag] = fsolve(@(vi) ftozero(vi, 0), inp.vi(ii), inp.options);
+        runTime = toc;
         if exitFlag == 1
-            if inp.bladeType(ii) == 0
-                [f, out] = solveRigidRotor(currVi, 1, currColl, inp, ambData, rotData, aeroData);
-            elseif inp.bladeType(ii) == 1
-                [f, out] = solveElasticRotor(currVi, 1, currColl, inp, ambData, rotData, aeroData, structure);
-            end
+            [f, out] = ftozero(currVi, 1);
             out.f = f;
             out.vi = currVi;
+            out.runTime = runTime;
             results.(currFieldName) = out;
         end
     else
@@ -97,12 +96,12 @@ for ii = 1:length(inp.collList)
     Qvec(ii) = results.(currFieldName).Q;
     Pvec(ii) = results.(currFieldName).P;
     viVec(ii) = results.(currFieldName).vi;
+    timeVec(ii) = results.(currFieldName).runTime;
     rowNames(ii) = currFieldName;
-
 end
 
-outTab = array2table([Tvec, Qvec, Pvec, inp.inflowType, viVec, inp.bladeType]);
-outTab.Properties.VariableNames = ["T [N]", "Q [Nm]", "P [hp]", "Real Infl?", "v_i [m/s]", "Elas?"];
+outTab = array2table([Tvec, Qvec, Pvec, inp.inflowType, viVec, inp.bladeType, timeVec]);
+outTab.Properties.VariableNames = ["T [N]", "Q [Nm]", "P [hp]", "Real Infl?", "v_i [m/s]", "Elas?", "runTime"];
 outTab.Properties.RowNames = rowNames;
 outTab %#ok<NOPTS> 
 

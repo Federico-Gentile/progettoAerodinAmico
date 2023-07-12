@@ -1,4 +1,4 @@
-figure;
+figure(1);
 
 for ii = 1:length(inp.collList)
     currColl = inp.collList(ii);
@@ -70,6 +70,34 @@ for ii = 1:length(inp.collList)
     plot(x, y, lineType, 'DisplayName', rowNames(ii));
     xlabel('r [m]');
     ylabel('$F_x$ [-]', 'Interpreter', 'latex');
+    legend('Location','best', 'Interpreter', 'none'); grid minor;
+
+end
+
+figure(2);
+
+for ii = 1:length(inp.collList)
+    currColl = inp.collList(ii);
+    if inp.inflowType(ii) == 0
+        lineType = '--';
+    elseif inp.inflowType(ii) == 1
+        lineType = '-';
+    end
+
+    subplot(1,2,1); hold on;
+    x = inp.x;
+    y = results.(rowNames(ii)).cm;
+    plot(x, y, lineType, 'DisplayName', rowNames(ii));
+    xlabel('r [m]');
+    ylabel('$C_m$ [-]', 'Interpreter', 'latex');
+    legend('Location','best', 'Interpreter', 'none'); grid minor;
+
+    subplot(1,2,2); hold on;
+    x = inp.x;
+    y = results.(rowNames(ii)).M;
+    plot(x, y, lineType, 'DisplayName', rowNames(ii));
+    xlabel('r [m]');
+    ylabel('$M$ [Nm]', 'Interpreter', 'latex');
     legend('Location','best', 'Interpreter', 'none'); grid minor;
 
 end
