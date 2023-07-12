@@ -1,4 +1,4 @@
-function [] = check(status)
+function [] = check(status, result)
 %CHECK Summary of this function goes here
 %   Detailed explanation goes here
 if status == 0
