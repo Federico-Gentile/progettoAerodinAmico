@@ -16,6 +16,7 @@ alpha = aColl + aTwis + aThet - aIndu*180/pi;
 cl = diag(interp2(aeroData.mach_cl, aeroData.angle_cl, aeroData.cl, mach', alpha));
 cm = diag(interp2(aeroData.mach_cm, aeroData.angle_cm, aeroData.cm, mach', alpha));
 
+%% Aggiungere proiezione del drag sull'equazione di flappeggio
 % Forcing term (RHS)
 RHSf = 0.5 * ambData.rho * rotData.c * Modesw .* repmat((u.^2 .* cl)',[rotData.No_c,1]);
 RHSm = 0.25 * ambData.rho * rotData.c^2 * Modest .* repmat((u.^2 .* cm)',[rotData.No_c,1]);
