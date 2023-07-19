@@ -4,10 +4,10 @@ addpath('Functions\');
 %% User defined inputs
 
 % Blade root collectives list [deg]
-inp.collList = [ 14 14 ];
+inp.collList = [ 12.5 13 13.5 14 ];
 
 % Blade type (0 rigid, 1 elastic)
-inp.bladeType = [ 0 1 ]';
+inp.bladeType = [ 0 0 0 0 ]';
 
 % Importing environment and rotor data
 addpath('Data/');
@@ -19,8 +19,8 @@ inp.aeroDataset = 'naca0012_CFD.mat';
 importAero;
 
 % Inflow type (0 fixed, 1 variable), value in [m/s]
-inp.inflowType = [ 1 1 ]';
-inp.vi = [ 10.97 10.97 ]; 
+inp.inflowType = [ 1 1 1 1]';
+inp.vi = [ 10.97 10.97 10.97 10.97 ]; 
 inp.options = optimoptions('fsolve', 'Display', 'off');
 
 % Number of sections along the blade for loads computation (for rigid

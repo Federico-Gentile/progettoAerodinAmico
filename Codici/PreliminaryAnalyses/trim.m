@@ -6,7 +6,7 @@ inp.bladeType = [0, 1];
 %% User defined inputs
 
 % Importing environment and rotor data
-addpath('Data/');
+addpath('Data/'); addpath('Functions\');
 environmentData;
 rotorData;
 
