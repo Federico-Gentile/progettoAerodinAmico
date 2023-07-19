@@ -28,11 +28,11 @@ mu      = 1.8*1e-5;
 % x = [0.21 0.25 0.290  3]; % profilo ape maia per test codice
 % x = [0.21 0.25 0.290 0.5]; % profilo goccia 1
 % x = [0.4 0.25 0.290 0.5]; % profilo goccia 2
-x = [0.3 0.12 0.4322 2.022];  % simile al NACA0012
-
+ x = [0.3 0.12 0.4322 2.022];  % simile al NACA0012
+ 
 % % % % %% Blade root coefficients evaluation (XFOIL)
 % Airfoil creation
-% airfoilCoordinatesXFOIL(x);
+ airfoilCoordinatesXFOIL(x);
 
 % %%
 fid = fopen('xfoil_input.txt','w');
@@ -52,15 +52,28 @@ fprintf(fid, 'visc on\n');
 fprintf(fid, '6e6\n');
 fprintf(fid,'iter 200\n');
 fprintf(fid, 'vpar\n');
-fprintf(fid, 'xtr\n');
-fprintf(fid, '0.05\n');
-fprintf(fid, '0.05\n\n');
+% fprintf(fid, 'xtr\n');
+% fprintf(fid, '0.05\n');
+% fprintf(fid, '0.05\n\n');
+fprintf(fid, 'N 3\n\n');
  machVecRoot = [0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.55 0.6];
-alphaVecRoot = 0:0.5:7;
+alphaVecRoot = 0:0.5:10;
 ClRoot = zeros(length(machVecRoot), length(alphaVecRoot));
 CdRoot = zeros(length(machVecRoot), length(alphaVecRoot));
 CmRoot = zeros(length(machVecRoot), length(alphaVecRoot));
 ncorr  = zeros(length(machVecRoot), 1);   % Keep track of polar correction for each Mach number
+V_cl = nan*ones(length(machVecRoot), length(alphaVecRoot));
+V_cd = nan*ones(length(machVecRoot), length(alphaVecRoot));
+V_cm = nan*ones(length(machVecRoot), length(alphaVecRoot));
+
+[XX, YY] = meshgrid(alphaVecRoot, machVecRoot);
+Y = [];
+X = [];
+V_cl = [];
+V_cd = [];
+V_cm = [];
+
+
 for ii = 1:length(machVecRoot)
     Re = rho * chord * machVecRoot(ii) * soundSpeed / mu;
     if ii == 1
@@ -69,7 +82,7 @@ for ii = 1:length(machVecRoot)
         fprintf(fid, 'a 0\n');
         fprintf(fid,'pacc\n');
         fprintf(fid,'polar.txt\n\n');
-        fprintf(fid,'aseq 0 7 0.5\n');
+        fprintf(fid,'aseq 0 10 0.5\n');
         s_xfoil  = readlines('xfoil_input.txt');
         ind_re   = find(strncmp(s_xfoil, 're', 2));
         ind_mach = find(strncmp(s_xfoil, 'mach', 4)); 
@@ -82,59 +95,88 @@ for ii = 1:length(machVecRoot)
     system('.\XFOIL\xfoil.exe < xfoil_input.txt; exit')
     % Extract data from polar.txt
     polar = readmatrix('polar.txt');
-    % Check if the XFOIL reached convergence for every tested AOA
-    % AT THE MOMENT THIS PIECE OF CODE DOES NOT WORK IF THERE ARE 2
-    % CONSECUTIVE NOT CONVERGED ANGLES.
-    if size(polar,1) ~= length(alphaVecRoot)
-        % Creating the corrected polar, which filles the non converged rows
-        % of the polar with a in interpolation of the neighbours values
-        polar_corrected = zeros(length(alphaVecRoot),size(polar,2));
-        % For loop to find the non converged cases
-        for kk = 1:length(alphaVecRoot)
-            % Particular case: update of the number of corrections when the
-            % last angle did not converged
-            if kk == length(alphaVecRoot) && ncorr(ii) ~= (length(alphaVecRoot) - size(polar, 1))
-                ncorr(ii) = ncorr(ii) + 1;
-            end
-            % If the non converged angle is found
-            if polar(kk-ncorr(ii),1) ~= alphaVecRoot(kk)
-                % The angle of polar corrected is set to the right one.
-                polar_corrected(kk, 1) = alphaVecRoot(kk);
-                % Particular case: the first angle did not converge
-                if kk == 1
-                     % We put the value of the successive angle
-                     polar_corrected(kk, 2:end) = polar(kk,2:end);  
-                % Particular case: the last angle di not converge
-                elseif kk == length(alphaVecRoot)
-                     % We put the value of the second to last angle
-                     polar_corrected(kk, 2:end) = polar(kk-ncorr(ii),2:end); 
-                else
-                     % Every other case
-                     polar_corrected(kk, 2:end) = (polar(kk-ncorr(ii),2:end) + polar(kk-1-ncorr(ii),2:end))/2;
-                end
-                % If you are not at the last angle update the number of
-                % correction
-                if kk ~= length(alphaVecRoot)
-                     ncorr(ii) = ncorr(ii) + 1;
-                end
-            else
-                % If the current angle is converged, simply copy the polar
-                % value
-                polar_corrected(kk, :) = polar(kk-ncorr(ii),:);
-            end
-            
-        end
-        ClRoot(ii,:) = polar_corrected(:,2)';
-        CdRoot(ii,:) = polar_corrected(:,3)';
-        CmRoot(ii,:) = polar_corrected(:,5)';
-    else
-        ClRoot(ii,:) = polar(:,2)';
-        CdRoot(ii,:) = polar(:,3)';
-        CmRoot(ii,:) = polar(:,5)';
-    end
+%     % Check if the XFOIL reached convergence for every tested AOA
+%     % AT THE MOMENT THIS PIECE OF CODE DOES NOT WORK IF THERE ARE 2
+%     % CONSECUTIVE NOT CONVERGED ANGLES.
+%     if size(polar,1) ~= length(alphaVecRoot)
+%         % Creating the corrected polar, which filles the non converged rows
+%         % of the polar with a in interpolation of the neighbours values
+%         polar_corrected = zeros(length(alphaVecRoot),size(polar,2));
+%         % For loop to find the non converged cases
+%         for kk = 1:length(alphaVecRoot)
+%             % Particular case: update of the number of corrections when the
+%             % last angle did not converged
+%             if kk == length(alphaVecRoot) && ncorr(ii) ~= (length(alphaVecRoot) - size(polar, 1))
+%                 ncorr(ii) = ncorr(ii) + 1;
+%             end
+%             % If the non converged angle is found
+%             if polar(kk-ncorr(ii),1) ~= alphaVecRoot(kk)
+%                 % The angle of polar corrected is set to the right one.
+%                 polar_corrected(kk, 1) = alphaVecRoot(kk);
+%                 % Particular case: the first angle did not converge
+%                 if kk == 1
+%                      % We put the value of the successive angle
+%                      polar_corrected(kk, 2:end) = polar(kk,2:end);  
+%                 % Particular case: the last angle di not converge
+%                 elseif kk == length(alphaVecRoot)
+%                      % We put the value of the second to last angle
+%                      polar_corrected(kk, 2:end) = polar(kk-ncorr(ii),2:end); 
+%                 else
+%                      % Every other case
+%                      polar_corrected(kk, 2:end) = (polar(kk-ncorr(ii),2:end) + polar(kk-1-ncorr(ii),2:end))/2;
+%                 end
+%                 % If you are not at the last angle update the number of
+%                 % correction
+%                 if kk ~= length(alphaVecRoot)
+%                      ncorr(ii) = ncorr(ii) + 1;
+%                 end
+%             else
+%                 % If the current angle is converged, simply copy the polar
+%                 % value
+%                 polar_corrected(kk, :) = polar(kk-ncorr(ii),:);
+%             end
+%             
+%         end
+%         ClRoot(ii,:) = polar_corrected(:,2)';
+%         CdRoot(ii,:) = polar_corrected(:,3)';
+%         CmRoot(ii,:) = polar_corrected(:,5)';
+%     else
+%         ClRoot(ii,:) = polar(:,2)';
+%         CdRoot(ii,:) = polar(:,3)';
+%         CmRoot(ii,:) = polar(:,5)';
+%     end
+    nConv = length(polar(:, 1));
+    X = [X; polar(:, 1)]; 
+    Y = [Y; machVecRoot(ii)*ones(nConv, 1)];
+    V_cl = [V_cl; polar(:, 2)];
+    V_cd = [V_cd; polar(:, 3)];
+    V_cm = [V_cm; polar(:, 5)];
+    
     % Delete current polar.txt
     delete polar.txt    
 end
+% figure()
+F_cl = scatteredInterpolant(X, Y, V_cl, 'natural');
+% surf(XX, YY, F_cl(XX, YY), 'FaceColor', 'r', 'FaceAlpha', 0.5)
+% hold on
+% surf(XX,  YY, ClRoot,  'FaceColor', 'g', 'FaceAlpha', 0.5)
+% figure()
+% surf(XX, YY, F_cl(XX, YY)-ClRoot, 'FaceColor', 'r', 'FaceAlpha', 0.5)
+% figure()
+F_cd = scatteredInterpolant(X, Y, V_cd, 'natural');
+% surf(XX, YY, F_cd(XX, YY), 'FaceColor', 'r', 'FaceAlpha', 0.5)
+% hold on
+% surf(XX,  YY, CdRoot,  'FaceColor', 'g', 'FaceAlpha', 0.5)
+% figure()
+% surf(XX, YY, F_cd(XX, YY)-CdRoot, 'FaceColor', 'r', 'FaceAlpha', 0.5)
+% figure()
+F_cm = scatteredInterpolant(X, Y, V_cm, 'natural');
+% surf(XX, YY, F_cm(XX, YY), 'FaceColor', 'r', 'FaceAlpha', 0.5)
+% hold on
+% surf(XX,  YY, CmRoot,  'FaceColor', 'g', 'FaceAlpha', 0.5)
+% figure()
+% surf(XX, YY, F_cm(XX, YY)-CmRoot, 'FaceColor', 'r', 'FaceAlpha', 0.5)
+
 
 %% Blade tip coefficients evaluation (CFD)
 % File .geo creation
