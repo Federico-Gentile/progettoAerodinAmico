@@ -19,9 +19,7 @@ visc on
 6e6
 iter 200
 vpar
-xtr
-0.05
-0.05
+N 3
 
 re 7455350
 mach 0.6
@@ -29,4 +27,5 @@ a 0
 pacc
 polar.txt
 
-aseq 0 7 0.5
+cinc
+aseq 0 10 0.5
