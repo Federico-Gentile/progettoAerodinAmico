@@ -3,11 +3,14 @@ addpath('../Optimization/functions');
 addpath('../Optimization/coordinates');
 
 % Mesh Generation User Defined Options
-opts.meshEnumerationStartIndex = 26;
+opts.meshEnumerationStartIndex = 90;
 opts.meshTypeFlag = "RANS";
-opts.x = [0.3 0.12 0.4322 2.022];  % simile al NACA0012
-opts.hList = [0.009871875 0.00658125 0.0043875 0.002925 0.00195 0.0015];
+%opts.x = [0.3 0.12 0.4322 2.022];  % simile al NACA0012
+%opts.x = [0.01 0.02 0.1 0.1 0.21 0.21 0.4322 1]; % strange nose
+opts.x = [0.292145187452082,0.890818975485375,-0.023794010335273,0.161501024200541,0.332505262005317,0.137728997850190,0.406463454094145,1.570632482448465]; % simile a un whitcomb
+opts.hList = 0.004;
 opts.R = 60;
+%--------------------------------------------------------------------------
 
 switch opts.meshTypeFlag
     case "Euler"

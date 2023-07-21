@@ -76,7 +76,7 @@ function [] = geoCreationRefBox(x,h,R,BL,meshName)
 %--------------------------------------------------------------------------
 
 %% Airfoil data import
-data_airfoil = airfoilCoordinatesCFD2(x, h);
+data_airfoil = airfoilCoordinatesCFD(x, h);
 %--------------------------------------------------------------------------
 
 %% Airfoil points
