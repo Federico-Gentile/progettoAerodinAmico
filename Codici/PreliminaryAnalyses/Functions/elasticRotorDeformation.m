@@ -13,8 +13,11 @@ aThet = Modest' * q * 180/pi;
 alpha = aColl + aTwis + aThet - aIndu*180/pi;
 
 % Aerodynamic loads
-cl = diag(interp2(aeroData.mach_cl, aeroData.angle_cl, aeroData.cl, mach', alpha));
-cm = diag(interp2(aeroData.mach_cm, aeroData.angle_cm, aeroData.cm, mach', alpha));
+Fcl = griddedInterpolant(aeroData.mach_cl', aeroData.angle_cl', aeroData.cl', 'spline');
+Fcm = griddedInterpolant(aeroData.mach_cm', aeroData.angle_cm', aeroData.cm', 'spline');
+[machq, alphaq] = meshgrid(mach, alpha);
+cl = diag(Fcl(machq', alphaq'));
+cm = diag(Fcm(machq', alphaq'));
 
 %% Aggiungere proiezione del drag sull'equazione di flappeggio
 % Forcing term (RHS)

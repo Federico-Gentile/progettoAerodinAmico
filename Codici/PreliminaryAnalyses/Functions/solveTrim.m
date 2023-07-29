@@ -1,16 +1,22 @@
-function [f, out] = solveTrim(coll, ftozeroInflow, viGuess, currACw, inp)
+function [f, out] = solveTrim(coll, ftozeroInflow, viGuess, currACw, inp, momentumTheory)
 %SOLVETRIM Summary of this function goes here
 %   Detailed explanation goes here
 
 % Computing thrust for requested collective value
-[outVi, ~, exitFlag] = fsolve(@(vi) ftozeroInflow(vi, 0, coll), viGuess, inp.options);
-
-if exitFlag == 1
-    [~, out] = ftozeroInflow(outVi, 1, coll);
-    out.vi = outVi;
-    T = out.T;
+if momentumTheory
+    [outVi, ~, exitFlag] = fsolve(@(vi) ftozeroInflow(vi, 0, coll), viGuess, inp.options);
+    
+    if exitFlag == 1
+        [~, out] = ftozeroInflow(outVi, 1, coll);
+        out.vi = outVi;
+        T = out.T;
+    else
+        error('Inflow not converged');
+    end
 else
-    error('Inflow not converged');
+    [~, out] = ftozeroInflow(viGuess, 1, coll);
+    out.vi = viGuess;
+    T = out.T;
 end
 
 % Trim equation residual

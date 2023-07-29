@@ -1,8 +1,8 @@
-function [f, out] = solveElasticRotor(vi, outFlag, currColl, inp, ambData, rotData, aeroData, structure)
+function [f, out] = solveElasticRotor(vi, outFlag, currColl, inp, ambData, rotData, aeroData, structure, momentumTheory)
 %SOLVEELASTICROTOR solves rotor induced velocity problem
 
 % Definition of mach at query points [-]
-u = sqrt( (rotData.omega*inp.x).^2 + vi^2 );
+u = sqrt( (rotData.omega*inp.x).^2 + vi.^2 );
 mach = u / ambData.c;
 
 % Definition of alpha at query points [deg] ( w blade deformation contribution)
@@ -18,8 +18,11 @@ alpha = aColl + aTwis + aThet - aIndu*180/pi;
 
 % Defining aerodynamic coefficients ad function of mach and AoA [deg]
 % mach and alpha are both column vectors of query points
-cl = diag(interp2(aeroData.mach_cl, aeroData.angle_cl,  aeroData.cl, mach', alpha));
-cd = diag(interp2(aeroData.mach_cd, aeroData.angle_cd,  aeroData.cd, mach', alpha));
+Fcl = griddedInterpolant(aeroData.mach_cl', aeroData.angle_cl', aeroData.cl', 'spline');
+Fcd = griddedInterpolant(aeroData.mach_cd', aeroData.angle_cd', aeroData.cd', 'spline');
+[machq, alphaq] = meshgrid(mach, alpha);
+cl = diag(Fcl(machq', alphaq'));
+cd = diag(Fcd(machq', alphaq'));
 L = 0.5 * ambData.rho * u.^2 .* rotData.c .* cl;
 D = 0.5 * ambData.rho * u.^2 .* rotData.c .* cd;
 
@@ -30,7 +33,11 @@ Fz = L.*cos(aIndu*pi/180) - D.*sin(aIndu*pi/180);
 T = 4*trapz(inp.x, Fz);
 
 % Inflow equation to be solved [m/s]
-f = sqrt(T/(2*ambData.rho*rotData.Ad)) - vi;
+if momentumTheory
+    f = sqrt(T/(2*ambData.rho*rotData.Ad)) - vi;
+else
+    f = 0;
+end
 
 % Collecting outputs
 if outFlag

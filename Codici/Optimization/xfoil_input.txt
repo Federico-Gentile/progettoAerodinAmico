@@ -21,8 +21,8 @@ iter 200
 vpar
 N 3
 
-re 7455350
-mach 0.6
+re 1242558.3333
+mach 0.1
 a 0
 pacc
 polar.txt
