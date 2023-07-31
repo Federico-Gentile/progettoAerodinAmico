@@ -1,4 +1,4 @@
-clear; close all; clc;
+clear; clc; close all;
 
 % Blade type (0 rigid, 1 elastic)
 inp.bladeType = [0, 1];
@@ -11,7 +11,7 @@ environmentData;
 rotorData;
 
 % Importing aerodynamic data (use naca0012_CFD.mat as template)
-inp.aeroDataset = 'naca0012_RANS.mat';
+inp.aeroDataset = 'G106_RANS.mat';
 
 % Aircraft weights list
 inp.targetACw = [50358.1360806500
@@ -22,7 +22,7 @@ inp.targetACw = [50358.1360806500
 
 % Collective [deg] and inflow velocity [m/s] initial guesses (+fsolve ops)
 inp.momentumTheory = 0;
-inp.coll0 = 10;
+inp.coll0 = 11;
 inp.vi0 = 10;
 inp.options = optimoptions('fsolve', 'Display', 'off');
 inp.inflowDataset = 'inflow.mat';
@@ -159,6 +159,33 @@ if inp.plotResults
         for jj = 1:length(inp.targetACw)
             x = results.(currBladeName).("ACw_"+num2str(jj, '%i')).mach;
             
+            subplot(1,2,1); hold on;
+            y = results.(currBladeName).("ACw_"+num2str(jj, '%i')).Fx;
+            plot(x, y,'DisplayName','Rigid Blade','LineWidth',inp.lineWidth, 'DisplayName', "ACw_"+num2str(jj, '%i'));
+            legend('Location','best'); grid minor;
+            xlabel('mach', 'FontSize', inp.fontSize);
+            ylabel('Fx [N/m]', 'FontSize', inp.fontSize);
+
+            subplot(1,2,2); hold on;
+            y = results.(currBladeName).("ACw_"+num2str(jj, '%i')).Fz;
+            plot(x, y,'DisplayName','Rigid Blade','LineWidth',inp.lineWidth, 'DisplayName', "ACw_"+num2str(jj, '%i'));
+            legend('Location','best'); grid minor;
+            xlabel('mach', 'FontSize', inp.fontSize);
+            ylabel('Fz [N/m]', 'FontSize', inp.fontSize);
+            
+        end
+    end
+
+    for ii = 1:length(inp.bladeType)
+        if inp.bladeType(ii) == 0
+            currBladeName = "RigidBlade";
+        elseif inp.bladeType(ii) == 1
+            currBladeName = "ElasticBlade";
+        end
+        figure;
+        for jj = 1:length(inp.targetACw)
+            x = results.(currBladeName).("ACw_"+num2str(jj, '%i')).mach;
+            
             subplot(2,2,1); hold on;
             y = results.(currBladeName).("ACw_"+num2str(jj, '%i')).alpha;
             plot(x, y,'DisplayName','Rigid Blade','LineWidth',inp.lineWidth, 'DisplayName', "ACw_"+num2str(jj, '%i'));
@@ -185,14 +212,9 @@ if inp.plotResults
             plot(x, y,'DisplayName','Rigid Blade','LineWidth',inp.lineWidth, 'DisplayName', "ACw_"+num2str(jj, '%i'));
             legend('Location','best'); grid minor;
             xlabel('mach', 'FontSize', inp.fontSize);
-            ylabel('cd', 'FontSize', inp.fontSize);
-    
-            
+            ylabel('cd', 'FontSize', inp.fontSize);           
         end
-
     end
-
-
 end
 
 
