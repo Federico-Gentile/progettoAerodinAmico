@@ -1,0 +1,21 @@
+load temporaryFiles/rootAirfoil.txt
+pane
+ppar
+N 200
+
+
+oper
+visc on
+6e6
+iter 200
+vpar
+N 4
+
+re 2078163.5402
+mach 0.16618
+a 0
+pacc
+polar.txt
+
+cinc
+aseq 0 9 0.5

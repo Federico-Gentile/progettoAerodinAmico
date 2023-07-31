@@ -1,65 +1,37 @@
-% function rotorPower = fitness(x)
-% x = [x_root x_tip transition_point];
-% x_root = x(1:4);
-% x_tip = x(5:8);
-% tr_point = x(9);
+function rotorPower = fitness(x, sett)
 
-clc
-clear 
-delete *.csv
-delete *.dat
-delete *.vtu
-delete *.geo
-% delete *.su2
-delete polar.txt
-
-
-
-%% Data
-data.rho     = 1.225;
-data.chord   = 0.537;
-data.soundSpeed = 340;
-data.mu      = 1.8*1e-5;
-data.gamma   = 1.4; 
-%% Testing   x = [XT,T,rho0,betaTE]
-% Upper and lower limits proposed by S. Bortolotti thesis
-% % % XT ∈ [0.21, 0.4]
-% % % T ∈ [0.07, 0.25]
-% % % ρ0_nd ∈ [0.29, 0.9]
-% % % βT_nd E ∈ [0.5, 3]
-% x = [0.21 0.25 0.290  3]; % profilo ape maia per test codice
-% x = [0.21 0.25 0.290 0.5]; % profilo goccia 1
-% x = [0.4 0.25 0.290 0.5]; % profilo goccia 2
- x_root = [0.3 0.12 0.4322 2.022];  % simile al NACA0012
- x_tip = [0.3 0.12 0.4322 2.022];
+x_root = x(1:4);
+x_tip = x(5:8);
  
-%% % % % %% Blade root coefficients evaluation (XFOIL)
+%% Blade root coefficients evaluation (XFOIL)
+
 % Airfoil creation
 airfoilCoordinatesXFOIL(x_root);
-machVecRoot = [0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.55 0.6];
-alphaVecRoot = 0:0.5:10;
-out_xfoil_root = runXFOIL(machVecRoot, alphaVecRoot, data);
+
+% Airfoil polar computation
+out_xfoil_root = runXFOIL(sett);
 
 aeroData{1}.cl = out_xfoil_root.Cl;
 aeroData{1}.cd = out_xfoil_root.Cd;
 aeroData{1}.cm = out_xfoil_root.Cm;
 
-%% % % % %% Blade tip coefficients guess (XFOIL)
+%% Blade tip coefficients guess (CFD)
+
+% File .geo creation
+geoCreationRefBox(x_tip, sett.mesh, 1);
+geoCreationRefBox(x_tip, sett.mesh, 0);
+
+% Mesh creation
+meshCommand = "gmsh -format su2 temporaryFiles/Gfine.geo -2 > temporaryFiles/fineMesh.log";
+system('wsl ' + meshCommand);
+meshCommand = "gmsh -format su2 temporaryFiles/Gcoarse.geo -2 > temporaryFiles/coarseMesh.log";
+system('wsl ' + meshCommand);
+
+% Launch CFD simulation
 
 
-airfoilCoordinatesXFOIL(x_tip);
-machVecTip = [0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.55 0.6];
-alphaVecTip = 0:0.5:10;
-out_xfoil_Tip = runXFOIL(machVecTip, alphaVecTip, data);
 
-aeroData{2}.cl = out_xfoil_Tip.Cl;
-aeroData{2}.cd = out_xfoil_Tip.Cd;
-aeroData{2}.cm = out_xfoil_Tip.Cm;
-
-%% Tentative rotor solution for CFD guess
-x = [0 0 0 0 0 0 0 0 3];
-[out, inp] = rotorSolution(x, aeroData, data, 0);
-
+end
 %% CFD Grid Creation
 
 % [~, ind] = min(abs(inp.x-5));

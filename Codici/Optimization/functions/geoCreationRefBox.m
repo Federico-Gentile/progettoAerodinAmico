@@ -1,4 +1,4 @@
-function [] = geoCreationRefBox(x,h,R,BL,meshName)
+function [] = geoCreationRefBox(x, mesh, flag)
 % GEOCREATIONREFBOX creates a .geo file for the mesh creation using GMSH. 
 % It takes as input:
 % - IGP parameters vector (x)
@@ -11,6 +11,20 @@ function [] = geoCreationRefBox(x,h,R,BL,meshName)
 % Il vettore h deve essere già nella sua forma finale, ovvero il prodotto
 % fra il vettore h_size del NACA0012 di Caccia e una misura di riferimento (ad esempio 0.01 o 0.005)
 %--------------------------------------------------------------------------
+
+% Input extraction
+if flag
+    h = mesh.h_fine;
+    meshName = 'Gfine.geo';
+else
+    h = mesh.h_coarse;
+    meshName = 'Gcoarse.geo';
+end
+
+H = mesh.H;
+R = mesh.R;
+BL = mesh.BLflag;
+
 
 %% OPTIONS
 % 1. Boundary Layer Flag (Euler vs RANS)
@@ -98,7 +112,7 @@ A(811,:) = [811, 0, -Rref, 0, Href];               % basso sx
 
 %% Printing
 % GMSH geometry file is stored as .geo file
-fileID = fopen('temporaryFiles\' + meshName,'w');
+fileID = fopen("temporaryFiles\" + meshName,'w');
 
 % Scrittura di tutti i punti airfoil + C-grid
 for i=1:size(A,1)

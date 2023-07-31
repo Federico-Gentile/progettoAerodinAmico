@@ -1,19 +1,11 @@
 
 % Puma rotor parameters
-rotData.ACw = 74000;                %Aircraft Weight N
+rotData.ACw = 85000;                %Aircraft Weight N
 rotData.R = 7.49;                   %Rotor radius m
 rotData.c = 0.537;                  %Blade chord m
 rotData.omega = 28.27433388;        %Rotor angular speed rad/s
 rotData.cutout = 2;                 %Blade cutout m
-rotData.EW = 37600;                 %EW N      
-rotData.GW =52000;                  %GW N
-rotData.MTWO = 74000;               %MTOW N
 rotData.Ad = pi^2 * rotData.R;      %Disk area m^2
-
-load("Vi.mat");
-rotData.r_Vi = bladeStations;
-rotData.Vi = vi;
-clear bladeStations vi
 
 %Blade twist deg
 rotData.rTw = [ 0
@@ -44,7 +36,7 @@ rotData.Twi = [ 0
                 -4.8
                 -6.111 ];
 
-if max(inp.bladeType) == 1
+if max(rotData.bladeType) == 1
     rotData.pitch_link_stiffness = 33032;
     rotData.pitch_link_factor = 1;
     rotData.xcg_shift = 0;
