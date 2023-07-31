@@ -1,17 +1,18 @@
 
 function [data_airfoil] = airfoilCoordinatesCFD2(x, h_mesh)
-% x = [((0.4-0.2)*rand+0.2) ((0.9-0.4)*rand+0.4) 0 0 ((0.4-0.21)*rand+0.21) ((0.25-0.1)*rand+0.1) ((0.9-0.29)*rand+0.29) ((3-0.5)*rand+0.5)]
+% x = [((0.4-0.2)*rand+0.2) ((0.9-0.4)*rand+0.4) 0 0 ((0.4-0.21)*rand+0.21) ((0.25-0.07)*rand+0.07) ((0.9-0.29)*rand+0.29) ((3-0.5)*rand+0.5)]
 %((0.247+0.074)*rand-0.074) ((0.206+0.102)*rand-0.102)
 % % c1 =  0.2;           % B[0.2, 0.4] 
 % % c2 =  0.4;          % B[0.4, 0.9]  
 % % c3 =  0;           % A[−0.074, 0.247] 
 % % c4 =  0;           % A[−0.102, 0.206]
 % % XT =  0.43;          % B[0.21, 0.4]  %aumentare max?
-% % T =   0.25;        % B[0.07, 0.25]   % aumentato lo spessore minimo al 10% 
+% % T =   0.25;        % B[0.07, 0.25]    
 % % rho0_nd = 0.29;      % B[0.29, 0.9]
 % % betaTE_nd = 0.5;    % B[0.5, 3]]
 
 % x = [0.2 0.4 0 0 0.4 0.25 0.29 0.5];
+% 
 % h_mesh = 0.002;
 
 % V2.0 - IGP per AIRFOIL NON SIMMETRICI !!!
@@ -58,14 +59,14 @@ h_airfoil = h_mesh.*(0.2+0.8.*readmatrix("h_coordinates_airfoil.txt"));
 % 5 parameters (t1, t2, t3, t4, t5) being the elements of vector t
 
 % IGP parameters from the design variables vector
-c1 = x(1);
-c2 = x(2); 
-c3 = x(3);
-c4 = x(4);
-XT = x(5);
-T = x(6);
-rho0_nd = x(7);
-betaTE_nd = x(8);
+% c1 = x(1);
+% c2 = x(2); 
+% c3 = x(3);
+% c4 = x(4);
+% XT = x(5);
+% T = x(6);
+% rho0_nd = x(7);
+% betaTE_nd = x(8);
 
 % Dimensional rho and beta from the non-dimensional values
 rho0 = rho0_nd*(T/XT)^2;

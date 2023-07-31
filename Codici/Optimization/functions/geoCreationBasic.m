@@ -1,4 +1,4 @@
-function [] = geoCreation(x)
+function [] = geoCreationBasic(x)
 
 % NOTE:
 % iter contiene i_cycle (iterata del ciclo di ottimizzazione) e i_part (indice della particella)

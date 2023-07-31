@@ -4,22 +4,14 @@ ppar
 N 200
 
 
-gdes
-tgap
-0.01
-0.3
-
-pane
-ppar
-N 210
-
-
 oper
 visc on
 6e6
 iter 200
 vpar
-N 3
+xtr
+0.05
+0.05
 
 re 1242558.3333
 mach 0.1
@@ -28,4 +20,4 @@ pacc
 polar.txt
 
 cinc
-aseq 0 10 0.5
+aseq 0 7 0.5

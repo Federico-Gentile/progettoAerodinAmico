@@ -1,35 +1,10 @@
 function [] = geoCreationRefBox(x,h,R,BL,meshName)
 % NOTE:
 % iter contiene i_cycle (iterata del ciclo di ottimizzazione) e i_part (indice della particella)
-% data_airfoil deve contenere 801 coordinate x,y dei punti del profilo
-% Le coordinate x,y devono essere ottenute utilizzando la discretizzazione in x del NACA0012 di Caccia
-% data_airfoil deve contenere 801 valori di h (dimensione mesh a ciascun punto)
+% data_airfoil DEVE contenere esattamente 801 coordinate x,y dei punti del profilo
+% Le coordinate x,y possono essere ottenute utilizzando la discretizzazione in x del NACA0012 di Caccia
 % Il vettore h deve essere già nella sua forma finale, ovvero il prodotto
 % fra il vettore h_size del NACA0012 di Caccia e una misura di riferimento (ad esempio 0.01 o 0.005)
-%--------------------------------------------------------------------------
-
-%% FOR TESTING ONLY
-%     h = 0.0015;
-    % 0.009871875 0.00658125 0.0043875 0.002925 0.00195 0.0015
-    % 10 15 20 25 30 35
-%     R = 60;
-%     BL = 1;
-    % x = [XT,T,rho0,betaTE]
-    % Upper and lower limits proposed by S. Bortolotti thesis
-    % % % XT ∈ [0.21, 0.4]
-    % % % T ∈ [0.07, 0.25]
-    % % % ρ0_nd ∈ [0.29, 0.9]
-    % % % βT_nd E ∈ [0.5, 3]
-    % x = [0.21 0.25 0.290  3]; % profilo ape maia per test codice
-    % x = [0.21 0.25 0.290 0.5]; % profilo goccia 1
-    % x = [0.4 0.25 0.290 0.5]; % profilo goccia 2
-    %x = [0.3 0.12 0.4322 2.022];  % simile al NACA0012
-    XT = x(1);
-    T = x(2);
-    rho0_nd = x(3);
-    betaTE_nd = x(4);
-    betaTE = betaTE_nd*atan(T/(1-XT));
-    betaTE_deg = rad2deg(betaTE);
 %--------------------------------------------------------------------------
 
 %% OPTIONS
@@ -42,7 +17,7 @@ function [] = geoCreationRefBox(x,h,R,BL,meshName)
 
 % 2. Domain independence <-> Grid independence
     % 1 = Domain independence
-    % 2 = Grid independence
+    % 2 = Grid independence (DEFAULT, R=60 is suggested for smooth meshing)
     II = 2;
 %--------------------------------------------------------------------------
 
