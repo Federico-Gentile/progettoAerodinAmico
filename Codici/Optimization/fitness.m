@@ -14,10 +14,7 @@ delete *.geo
 delete polar.txt
 
 
-addpath(genpath("configFiles"))
-addpath(genpath("coordinates"))
-addpath(genpath("functions"))
-addpath(genpath("XFOIL"))
+
 %% Data
 data.rho     = 1.225;
 data.chord   = 0.537;

@@ -1,4 +1,9 @@
 function [] = geoCreationRefBox(x,h,R,BL,meshName)
+% GEOCREATIONREFBOX creates a .geo file for the mesh creation using GMSH. 
+% It takes as input:
+% - IGP parameters vector (x)
+% - mesh specifications (h, R, BL, meshName)
+
 % NOTE:
 % iter contiene i_cycle (iterata del ciclo di ottimizzazione) e i_part (indice della particella)
 % data_airfoil DEVE contenere esattamente 801 coordinate x,y dei punti del profilo
@@ -40,9 +45,9 @@ function [] = geoCreationRefBox(x,h,R,BL,meshName)
 
     % For GRID INDEPENDENCE and DOMAIN INDEPENDENCE ONLY! 
     if II == 1
-    H = R./15;             % Dimension at farfield for domain ind.
+        H = R./15;             % Dimension at farfield for domain ind.
     elseif II == 2
-    H = (R/10).*250.*h;            % Dimension at farfield for grid ind.
+        H = (R/10).*250.*h;            % Dimension at farfield for grid ind.
     end
 
     % Other data
@@ -51,7 +56,7 @@ function [] = geoCreationRefBox(x,h,R,BL,meshName)
 %--------------------------------------------------------------------------
 
 %% Airfoil data import
-data_airfoil = airfoilCoordinatesCFD2(x, h);
+data_airfoil = airfoilCoordinatesCFD(x, h);
 %--------------------------------------------------------------------------
 
 %% Airfoil points
@@ -88,21 +93,12 @@ A(806,:) = [806, 0.25, -R, 0, H];       % basso dx
 A(807,:) = [807, 1.7*R, -R/3, 0, H/5];    % basso dx
 A(808,:) = [808, 1.7*R, R/3, 0, H/5];     % alto dx
 A(809,:) = [809, 0, Rref, 0, Href];            % alto sx
-%A(809,:) = [809, 0.25, Rref, 0, Href/20];     % alto sx
 A(810,:) = [810, 0, 0, 0, Href];               % centro cerchio
-%A(810,:) = [810, 0.25, 0, 0, Href/20];        % centro cerchio
 A(811,:) = [811, 0, -Rref, 0, Href];               % basso sx
-%A(811,:) = [811, 0.25, -Rref, 0, Href/20];        % basso sx
-
-%% Refinement for Shock points
-% A(812,:) = [812, 0.07, 0.034, 0, Href/20];    % basso sx
-% A(813,:) = [813, 0.23, 0.0343, 0, Href/20];      % basso dx
-% A(814,:) = [814, 0.23, 0.327, 0, Href/20];     % alto dx
-% A(815,:) = [815, 0.07, 0.327, 0, Href/20];       % alto sx
 
 %% Printing
 % GMSH geometry file is stored as .geo file
-fileID = fopen(meshName,'w');
+fileID = fopen('temporaryFiles\' + meshName,'w');
 
 % Scrittura di tutti i punti airfoil + C-grid
 for i=1:size(A,1)

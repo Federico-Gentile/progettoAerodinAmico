@@ -2,8 +2,14 @@
 % This step is necessary to run any wsl program from MATLAB scripts.
 % This script must be run whenever a new MATLAB session is started
 
-% SU2_RUNS add
+addpath("inputFiles")
+addpath("configFiles")
+addpath("coordinatesFiles")
+addpath("temporaryFiles")
+addpath("functions")
+addpath("XFOIL")
 
+% SU2_RUNS add
 setenv('PATH', [getenv('PATH') ';\\wsl.localhost\Ubuntu\home\fede\Codes\SU2_bin\bin'])
 % setenv('PATH', [getenv('PATH') ';\\wsl.localhost\Ubuntu\home\matteo\codes\su2\SU2_bin\bin'])
 

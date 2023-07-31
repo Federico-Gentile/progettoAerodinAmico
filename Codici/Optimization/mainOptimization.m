@@ -2,8 +2,7 @@
 clc
 clear
 close all
-addpath("configFiles")
-addpatg("functions")
+
 %% Choose airfoil parametrization and define lower and upper boundaries of design space
 % IGP: x = [XT T rho0 betaTE], UM [- - - rad]  
 % I valori massimi e minimi per i parametri rho0 e betaTE sono ottenuti scalando gli intervalli dei rispettivi valori adimensionali 

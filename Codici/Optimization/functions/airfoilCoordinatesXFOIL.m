@@ -1,5 +1,8 @@
+function airfoilCoordinatesXFOIL(y)
+% AIRFOILCOORDINATESXFOIL takes as input vector IGP parameters (y). 
+% As output, it generates a selig format file (inside temporaryFiles)
+% containing x and y coordinates of the airfoil.
 
-function [x_coordinates,y_coordinates] = airfoilCoordinatesXFOIL(y)
 % NOTE:
 % y in INPUT deve essere il vettore di 4 parametri per profilo IGP simmetrico
 % Il codice produce un profilo con sharp TE. Quest'ultimo può eventualmente essere rimaneggiato direttamente all'interno di XFOIL
@@ -66,7 +69,7 @@ end
 %--------------------------------------------------------------------------
 
 %% Printing to .txt
-fileID = fopen('rootAirfoil.txt','w');
+fileID = fopen('temporaryFiles\rootAirfoil.txt','w');
 fprintf(fileID,'rootAirfoil\n');
 % Scrittura delle coordinate dalla seconda riga in poi
 for ii=2:size(A,1)

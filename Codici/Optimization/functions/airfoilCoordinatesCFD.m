@@ -1,5 +1,7 @@
-
 function [data_airfoil] = airfoilCoordinatesCFD(x, h_mesh)
+% AIRFOILCOORDINATESCFD takes as input vector IGP parameters (x) and scalar
+% mesh size (h_mesh). Returns three vectors: x, y (coordinates of the
+% airfoil points) and h_vect (local element size for mesh generation)
 
 % NOTE:
 % data_airfoil deve contenere 801 coordinate x,y dei punti del profilo
@@ -9,18 +11,6 @@ function [data_airfoil] = airfoilCoordinatesCFD(x, h_mesh)
 % "An improved geometric parameter airfoil parameterizationmethod", Lu Xiaoqiang, Huang Jun, Song Lei, Li Jing (2018)
 % x = [XT,T,rho0,betaTE]
 % t = [t1,t2,t3,t4,t5]
-%--------------------------------------------------------------------------
-
-%%%%%%%%%%%%%%%%%%%% TEST CASE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % % close all
-% % % clear all
-% % % clc
-% % % x_airfoil = readmatrix("x_coordinates_airfoil.txt")';
-% % % h_airfoil = 0.005.*readmatrix("h_coordinates_airfoil.txt")';
-% % % XT = 0.4;
-% % % T = 0.07;
-% % % rho0_nd = 0.29;
-% % % betaTE_nd = 3;
 %--------------------------------------------------------------------------
 
 % Upper and lower limits proposed by the IGP paper authors
@@ -39,10 +29,10 @@ function [data_airfoil] = airfoilCoordinatesCFD(x, h_mesh)
 x_airfoil = readmatrix("x_coordinates_airfoil.txt");
 h_airfoil = h_mesh.*(0.2+0.8.*readmatrix("h_coordinates_airfoil.txt"));
 
-% % % Warning for incorrect number of grid points
-% % if length(x_airfoil)~=801 || length(h_airfoil)~=801
-% %     warning('Le x o h in input ad airfoil_coordinates non sono 801!')
-% % end
+% % Warning for incorrect number of grid points
+% if length(x_airfoil)~=801 || length(h_airfoil)~=801
+%     warning('Le x o h in input ad airfoil_coordinates non sono 801!')
+% end
 
 %% IGP Parametrization
 % Thickness distribution is the polynomial reported below
