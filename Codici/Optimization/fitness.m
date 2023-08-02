@@ -18,8 +18,8 @@ aeroData{1}.cm = out_xfoil_root.Cm;
 %% Blade tip coefficients guess (CFD)
 
 % File .geo creation
-geoCreationRefBox(x_tip, sett.mesh, 1);
-geoCreationRefBox(x_tip, sett.mesh, 0);
+geoCreationRefBox(x_tip, sett.mesh, sett.mesh.h_fine, "Gfine.geo");
+geoCreationRefBox(x_tip, sett.mesh, sett.mesh.h_coarse, "Gcoarse.geo");
 
 % Mesh creation
 meshCommand = "gmsh -format su2 temporaryFiles/Gfine.geo -2 > temporaryFiles/fineMesh.log";

@@ -1,9 +1,11 @@
 clear; close all; clc;
 addpath('../Optimization/functions');
 addpath('../Optimization/coordinatesFiles');
+addpath('../Optimization/temporaryFiles');
+addpath('../Optimization');
 
 % Mesh Generation User Defined Options
-opts.meshEnumerationStartIndex = 19;
+opts.meshEnumerationStartIndex = 20;
 opts.meshTypeFlag = "RANS";
 opts.x = [0.3 0.12 0.4322 2.022];  % simile al NACA0012
 %opts.x = [0.01 0.02 0.1 0.1 0.21 0.21 0.4322 1]; % strange nose
@@ -12,15 +14,15 @@ opts.x = [0.3 0.12 0.4322 2.022];  % simile al NACA0012
 % opts.x = [0.358441465911911,0.879746213196452,0,0,0.334590732839752,0.105356751786128,0.807968876579954,2.834983119393876]; %G106 goccia sottile
 % opts.hList = 0.00658;
 % opts.hList = 0.00439;
-opts.hList = 0.015;
+opts.hList = 0.01;
 opts.R = 60;
 %--------------------------------------------------------------------------
 
 switch opts.meshTypeFlag
     case "Euler"
-        opts.BL = 0;
+        opts.BLflag = 0;
     case "RANS"
-        opts.BL = 1;
+        opts.BLflag = 1;
 end
 
 counter = -1;
@@ -35,7 +37,7 @@ for h = opts.hList
     geoMeshName = "meshG" + num2str(opts.meshEnumerationStartIndex+counter,'%i') + ".geo";
     
     % Generating .geo file
-    geoCreationRefBox(opts.x,h,opts.R,opts.BL,geoMeshName)
+    geoCreationRefBox(opts.x,opts,opts.hList,geoMeshName)
 
     % Generating .su2 file
     meshCommand = "gmsh -format su2 " + geoMeshName + " -2";

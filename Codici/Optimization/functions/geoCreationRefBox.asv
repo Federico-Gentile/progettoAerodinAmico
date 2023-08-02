@@ -157,6 +157,7 @@ fprintf(fileID,'Field[1].Quads=1;\n');
     fprintf(fileID,'Field[1].Ratio=1.11;\n');
     else       % BL elements transition smoothing for coarse meshes
     fprintf(fileID,'Field[1].Ratio=1.2;\n');
+    coarse = 1
     end
 fprintf(fileID,'Field[1].Size=%d;\n',ss);
     if h<0.009  % fine meshes

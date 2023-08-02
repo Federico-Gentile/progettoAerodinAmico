@@ -18,11 +18,10 @@ sett.desVar.nVars = 8;
 
 % RANS mesh setting
 sett.mesh.h_fine = 0.00439; % G22
-% sett.mesh.h_coarse = 0.015; % G19
-sett.mesh.h_coarse = 0.01; % G20
+sett.mesh.h_coarse = 0.015; % G19
 % sett.mesh.H = 20; --> H is calculated as function of h and R in geoCreationRefBox.m
 sett.mesh.R = 60;           % A value of R=60 is suggested for both domain independence considerations and smooth meshing using geoCreationRefBox.m
-sett.mesh.BLflag = 1;       % 0 = No BL (Euler)   1 = BL (RANS)
+sett.mesh.BLflag = 1;       
 
 % XFOIL settings
 sett.XFOIL.Npane = 200;
