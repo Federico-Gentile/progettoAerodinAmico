@@ -21,7 +21,7 @@ sett.desVar.nVars = 8;
 sett.rotSol.bladeType = 0;
 
 % Collective [deg] and inflow velocity [m/s] initial guesses (+fsolve ops)
-sett.rotSol.coll0 = 10;
+sett.rotSol.coll0 = 15.4587;  % NACA0012 collective trim
 sett.rotSol.options = optimoptions('fsolve', 'Display', 'off');
 
 % Number of sections along the blade for loads computation (for rigid rotor)

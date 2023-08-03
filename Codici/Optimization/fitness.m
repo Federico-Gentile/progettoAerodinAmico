@@ -27,12 +27,19 @@ aeroData{1}.cl = out_xfoil_root.Cl;
 aeroData{1}.cd = out_xfoil_root.Cd;
 aeroData{1}.cm = out_xfoil_root.Cm;
 
-
-%% Launch CFD simulation
-
-
-
+flag = 0;
+while true && flag == 0
+    if isfile('temporaryFiles/Gcoarse.su2') 
+        flag = 1;
+    end  
 end
+%% Launch CFD simulation
+text = readlines('shellScripts\main.sh');
+for
+text{1} = ['MACH_NUMBER=' num2str(machVecTip(ii))];
+
+% fprintf(fid, )
+
 %% CFD Grid Creation
 
 % [~, ind] = min(abs(inp.x-5));

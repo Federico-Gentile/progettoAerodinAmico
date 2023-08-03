@@ -4,7 +4,8 @@ close all
 
 %% Run setting
 optimizationSettings;
-load('naca0012_RANS.mat')
+%load('naca0012_RANS.mat')
+load('G105_RANS.mat')
 cl = griddedInterpolant(MACH_Cl', ANGLE_Cl', Cl');
 cd = griddedInterpolant(MACH_Cd', ANGLE_Cd', Cd');
 cm = griddedInterpolant(MACH_Cm', ANGLE_Cm', Cm');
@@ -23,7 +24,7 @@ indexMachCFD = ceil(linspace(ind, length(x), nMachCFD));
 nAlphaCFD = 6;
 machGridCFD = repmat(out.mach(indexMachCFD)', nAlphaCFD, 1);
 alphaGridCFD1 = repmat(out.alpha(indexMachCFD)', nAlphaCFD, 1) + linspace(-2, 2, nAlphaCFD)';
-alphaGridCFD = repmat(linspace(min(out.alpha)-2, max(out.alpha)+2, nAlphaCFD),nMachCFD,1)';
+alphaGridCFD = repmat(linspace(min(out.alpha)-0.6, max(out.alpha)+0.6, nAlphaCFD),nMachCFD,1)';
 machVec = out.mach(indexMachCFD)';
 alphaVec = reshape(alphaGridCFD, [], 1);
 alphaVec1 = reshape(alphaGridCFD1, [], 1);
@@ -43,7 +44,7 @@ zscaled = INvec*10+1;                                             % May Be Neces
 cn = ceil(max(zscaled));                                        % Number Of Colors (Scale AsAppropriate)
 cm = colormap(jet(cn));                                         % Define Colormap
 
-figure();
+figure
 plot(alphaGridCFD, machGridCFD, 'ko', 'DisplayName','GRID')
 hold on;
 plot(alphaGridCFD1, machGridCFD, 'ro', 'DisplayName','GRID')
@@ -94,41 +95,41 @@ legend()
 % colorbar()
 % 
 % 
-%% Fitting Cl
-machVec = reshape(machGridCFD,[],1);
-alphaVec = reshape(alphaGridCFD,[],1);
-
-clFit = fit([machVec alphaVec], reshape(aeroData{1}.cl(machGridCFD, alphaGridCFD), [], 1),'poly33');
-
-figure
-surf(xx, yy, abs(clFit(xx, yy)-aeroData{1}.cl(xx, yy))./aeroData{1}.cl(xx, yy),'FaceAlpha', 0.5);
-hold on
-plot3(out.mach, out.alpha, zeros(length(out.mach),length(out.alpha)),'Marker','o','MarkerEdgeColor','r','MarkerFaceColor','r','MarkerSize',4,'LineStyle','none');
-plot3(machGridCFD, alphaGridCFD, zeros(size(machGridCFD)),'ko')
-
-figure
-surf(xx, yy, clFit(xx, yy), 'FaceColor', 'r');
-hold on
-surf(xx, yy, aeroData{1}.cl(xx, yy));
-plot3(machGridCFD, alphaGridCFD,aeroData{1}.cl(machGridCFD, alphaGridCFD), 'ro')
-
-
-%% Fitting Cd
-cdFit = fit([machVec alphaVec], reshape(aeroData{1}.cd(machGridCFD, alphaGridCFD), [], 1),'poly33');
-
-figure
-surf(xx, yy, abs(cdFit(xx, yy)-aeroData{1}.cd(xx, yy))./aeroData{1}.cd(xx, yy),'FaceAlpha', 0.5);
-hold on
-plot3(out.mach, out.alpha, zeros(length(out.mach),length(out.alpha)),'Marker','o','MarkerEdgeColor','r','MarkerFaceColor','r','MarkerSize',4,'LineStyle','none');
-plot3(machGridCFD, alphaGridCFD, zeros(size(machGridCFD)),'ko')
-zlim([0 0.1])
-
-figure
-surf(xx, yy, cdFit(xx, yy), 'FaceColor', 'r');
-hold on
-surf(xx, yy, aeroData{1}.cd(xx, yy));
-plot3(machGridCFD, alphaGridCFD,aeroData{1}.cd(machGridCFD, alphaGridCFD), 'ro')
-
+% %% Fitting Cl
+% machVec = reshape(machGridCFD,[],1);
+% alphaVec = reshape(alphaGridCFD,[],1);
+% 
+% clFit = fit([machVec alphaVec], reshape(aeroData{1}.cl(machGridCFD, alphaGridCFD), [], 1),'poly33');
+% 
+% figure
+% surf(xx, yy, abs(clFit(xx, yy)-aeroData{1}.cl(xx, yy))./aeroData{1}.cl(xx, yy),'FaceAlpha', 0.5);
+% hold on
+% plot3(out.mach, out.alpha, zeros(length(out.mach),length(out.alpha)),'Marker','o','MarkerEdgeColor','r','MarkerFaceColor','r','MarkerSize',4,'LineStyle','none');
+% plot3(machGridCFD, alphaGridCFD, zeros(size(machGridCFD)),'ko')
+% 
+% figure
+% surf(xx, yy, clFit(xx, yy), 'FaceColor', 'r');
+% hold on
+% surf(xx, yy, aeroData{1}.cl(xx, yy));
+% plot3(machGridCFD, alphaGridCFD,aeroData{1}.cl(machGridCFD, alphaGridCFD), 'ro')
+% 
+% 
+% %% Fitting Cd
+% cdFit = fit([machVec alphaVec], reshape(aeroData{1}.cd(machGridCFD, alphaGridCFD), [], 1),'poly33');
+% 
+% figure
+% surf(xx, yy, abs(cdFit(xx, yy)-aeroData{1}.cd(xx, yy))./aeroData{1}.cd(xx, yy),'FaceAlpha', 0.5);
+% hold on
+% plot3(out.mach, out.alpha, zeros(length(out.mach),length(out.alpha)),'Marker','o','MarkerEdgeColor','r','MarkerFaceColor','r','MarkerSize',4,'LineStyle','none');
+% plot3(machGridCFD, alphaGridCFD, zeros(size(machGridCFD)),'ko')
+% zlim([0 0.1])
+% 
+% figure
+% surf(xx, yy, cdFit(xx, yy), 'FaceColor', 'r');
+% hold on
+% surf(xx, yy, aeroData{1}.cd(xx, yy));
+% plot3(machGridCFD, alphaGridCFD,aeroData{1}.cd(machGridCFD, alphaGridCFD), 'ro')
+% 
 
 %% Interp2 cl
 CL = aeroData{1}.cl(machGridCFD, alphaGridCFD);
@@ -173,7 +174,7 @@ end
 
 
 
-FF = @(x, y) interp2(machGridCFD, alphaGridCFD, CL, x, y, 'spline');
+FF =  griddedInterpolant(machGridCFD', alphaGridCFD', CL');
 figure();
 [xx, yy] = meshgrid(linspace(out.mach(ind), out.mach(end), 100), linspace(min(out.alpha)-2, max(out.alpha)+2, 100));
 surf(xx, yy, abs(FF(xx, yy)-aeroData{1}.cl(xx, yy))./aeroData{1}.cl(xx, yy),'FaceAlpha', 0.5);
@@ -193,7 +194,7 @@ view(2)
 colorbar()
 
 %% Interp2 cd
-FF = @(x, y) interp2(machGridCFD, alphaGridCFD, CD, x, y, 'spline');
+FF = griddedInterpolant(machGridCFD', alphaGridCFD', CD');
 figure();
 [xx, yy] = meshgrid(linspace(out.mach(ind), out.mach(end), 100), linspace(min(out.alpha)-2, max(out.alpha)+2, 100));
 surf(xx, yy,(FF(xx, yy)-aeroData{1}.cd(xx, yy))./aeroData{1}.cd(xx, yy),'FaceAlpha', 0.5);
