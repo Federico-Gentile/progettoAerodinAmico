@@ -2,7 +2,19 @@ function rotorPower = fitness(x, sett)
 
 x_root = x(1:4);
 x_tip = x(5:8);
- 
+
+%% Meshes Creation (CFD)
+
+% File .geo creation
+geoCreationRefBox(x_tip, sett.mesh, sett.mesh.h_fine, "temporaryFiles/Gfine.geo");
+geoCreationRefBox(x_tip, sett.mesh, sett.mesh.h_coarse, "temporaryFiles/Gcoarse.geo");
+
+% Mesh creation
+meshCommand = "gmsh -format su2 temporaryFiles/Gfine.geo -2 > temporaryFiles/fineMesh.log";
+system('start /B wsl ' + meshCommand);
+meshCommand = "gmsh -format su2 temporaryFiles/Gcoarse.geo -2 > temporaryFiles/coarseMesh.log";
+system('start /B wsl ' + meshCommand);
+
 %% Blade root coefficients evaluation (XFOIL)
 
 % Airfoil creation
@@ -15,19 +27,8 @@ aeroData{1}.cl = out_xfoil_root.Cl;
 aeroData{1}.cd = out_xfoil_root.Cd;
 aeroData{1}.cm = out_xfoil_root.Cm;
 
-%% Blade tip coefficients guess (CFD)
 
-% File .geo creation
-geoCreationRefBox(x_tip, sett.mesh, sett.mesh.h_fine, "Gfine.geo");
-geoCreationRefBox(x_tip, sett.mesh, sett.mesh.h_coarse, "Gcoarse.geo");
-
-% Mesh creation
-meshCommand = "gmsh -format su2 temporaryFiles/Gfine.geo -2 > temporaryFiles/fineMesh.log";
-system('wsl ' + meshCommand);
-meshCommand = "gmsh -format su2 temporaryFiles/Gcoarse.geo -2 > temporaryFiles/coarseMesh.log";
-system('wsl ' + meshCommand);
-
-% Launch CFD simulation
+%% Launch CFD simulation
 
 
 

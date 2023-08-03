@@ -1,22 +1,35 @@
 
-% Importing environment data
+%% Importing environment data
 environmentData;
 
-% Importing rotor data
+%% Importing rotor data
 rotData.bladeType = 0; % 0 rigid, 1 elastic
 rotorData;
 
-% Blending criterium setting
+%% Blending criterium setting
 sett.blending.A = 0.05; % amplitude of the blending region (over rotor radius)
 
-% Design variable data
-sett.desVar.switchPoint = 0.75;
+%% Design variable data
+sett.desVar.switchPoint = 0.8;
 sett.desVar.switchMach = sett.desVar.switchPoint*rotData.R*rotData.omega/ambData.c;
 sett.desVar.LB = [ 0.21 0.07 0.290  0.5 0.21 0.07 0.290  0.5 ]; % From Bortolotti
 sett.desVar.UB = [ 0.4  0.25    0.9   3 0.4  0.25    0.9   3 ]; % From Bortolotti
 sett.desVar.nVars = 8;
 
-% RANS mesh setting
+%% Rotor solution settings
+% Blade type (0 rigid, 1 elastic)
+sett.rotSol.bladeType = 0;
+
+% Collective [deg] and inflow velocity [m/s] initial guesses (+fsolve ops)
+sett.rotSol.coll0 = 10;
+sett.rotSol.options = optimoptions('fsolve', 'Display', 'off');
+
+% Number of sections along the blade for loads computation (for rigid rotor)
+sett.rotSol.tr = sett.desVar.switchPoint * rotData.R;
+sett.rotSol.Nsega = 100;
+sett.rotSol.x = linspace(rotData.cutout, rotData.R, sett.rotSol.Nsega)';
+
+%% RANS mesh setting
 sett.mesh.h_fine = 0.00439; % G22
 % sett.mesh.h_coarse = 0.015; % G19
 sett.mesh.h_coarse = 0.01; % G20
@@ -24,19 +37,19 @@ sett.mesh.h_coarse = 0.01; % G20
 sett.mesh.R = 60;           % A value of R=60 is suggested for both domain independence considerations and smooth meshing using geoCreationRefBox.m
 sett.mesh.BLflag = 1;       % 0 = No BL (Euler)   1 = BL (RANS)
 
-% XFOIL settings
+%% XFOIL settings
 sett.XFOIL.Npane = 200;
 sett.XFOIL.tgapFlag = 0; % very dangerous, leave it to 0
 sett.XFOIL.Ncrit = 4;
 sett.XFOIL.machRoot = linspace((rotData.cutout*rotData.omega/ambData.c), ((sett.desVar.switchPoint-sett.blending.A)*rotData.R*rotData.omega/ambData.c), 10); 
 sett.XFOIL.alphaRoot = 0:0.5:9; % deg
 
-% RANS setting
+%% RANS simulation setting
 sett.RANS.nproc = 2; % number of thread to run each RANS simulation
 sett.RANS.maxThr = 18; % maximum number of threads involved in the optimization
 sett.RANS.critPoint = [6, 0.6]; % [alpha, mach] point used for RANS correction
 
-% Importing inflow data
+%% Importing inflow data
 inflow = load("inflow.mat");
 [x,y] = meshgrid(inflow.bladeStations, inflow.Wac);
 inflow.Finfl = griddedInterpolant(x', y', inflow.vi');
