@@ -1,9 +1,7 @@
 clear; close all; clc;
 
 %% Importing inputs
-
-optimizationSettings;
-
+preProcess;
 %% Optimization cycle
 
 % [x,fval,exitFlag,output] = particleswarm(@(x) fitness(x, sett), sett.desVar.nVars, sett.desVar.LB, sett.desVar.UB);

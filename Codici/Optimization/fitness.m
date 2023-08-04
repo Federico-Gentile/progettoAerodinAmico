@@ -15,17 +15,17 @@ system('start /B wsl ' + meshCommand);
 meshCommand = "gmsh -format su2 temporaryFiles/Gcoarse.geo -2 > temporaryFiles/coarseMesh.log";
 system('start /B wsl ' + meshCommand);
 
-%% Blade root coefficients evaluation (XFOIL)
-
-% Airfoil creation
-airfoilCoordinatesXFOIL(x_root);
-
-% Airfoil polar computation
-out_xfoil_root = runXFOIL(sett);
-
-aeroData{1}.cl = out_xfoil_root.Cl;
-aeroData{1}.cd = out_xfoil_root.Cd;
-aeroData{1}.cm = out_xfoil_root.Cm;
+% %% Blade root coefficients evaluation (XFOIL)
+% 
+% % Airfoil creation
+% airfoilCoordinatesXFOIL(x_root);
+% 
+% % Airfoil polar computation
+% out_xfoil_root = runXFOIL(sett);
+% 
+% aeroData{1}.cl = out_xfoil_root.Cl;
+% aeroData{1}.cd = out_xfoil_root.Cd;
+% aeroData{1}.cm = out_xfoil_root.Cm;
 
 flag = 0;
 while true && flag == 0
@@ -34,12 +34,8 @@ while true && flag == 0
     end  
 end
 %% Launch CFD simulation
-text = readlines('shellScripts\main.sh');
-for
-text{1} = ['MACH_NUMBER=' num2str(machVecTip(ii))];
-
-% fprintf(fid, )
-
+system('wsl ./shellScripts/main.sh')
+end
 %% CFD Grid Creation
 
 % [~, ind] = min(abs(inp.x-5));

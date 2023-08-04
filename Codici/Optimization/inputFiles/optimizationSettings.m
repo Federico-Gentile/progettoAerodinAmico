@@ -16,6 +16,28 @@ sett.desVar.LB = [ 0.21 0.07 0.290  0.5 0.21 0.07 0.290  0.5 ]; % From Bortolott
 sett.desVar.UB = [ 0.4  0.25    0.9   3 0.4  0.25    0.9   3 ]; % From Bortolotti
 sett.desVar.nVars = 8;
 
+%% RANS stencil creation
+% Importing NACA0012 RANS results
+load('naca0012_RANS.mat')
+cl = griddedInterpolant(MACH_Cl', ANGLE_Cl', Cl');
+cd = griddedInterpolant(MACH_Cd', ANGLE_Cd', Cd');
+cm = griddedInterpolant(MACH_Cm', ANGLE_Cm', Cm');
+sett.aeroData{1}.cl = cl;
+sett.aeroData{1}.cd = cd;
+sett.aeroData{1}.cm = cm;
+sett.aeroData{2}.cl = cl;
+sett.aeroData{2}.cd = cd;
+sett.aeroData{2}.cm = cm;
+clear MACH* ANGLE* c* C*
+
+% Grid size
+sett.stencil.nAlphaCFD = 6;
+sett.stencil.nMachCFD = 4;
+
+% nCores distribution
+sett.cores.nCores = 15;
+sett.cores.nCoresFine = 6;  % Must be even for MPIRUN restarting reasons
+sett.cores.nCoresCoarse = 1;
 %% Rotor solution settings
 % Blade type (0 rigid, 1 elastic)
 sett.rotSol.bladeType = 0;
@@ -69,4 +91,7 @@ elseif length(sett.desVar.LB) ~= sett.desVar.nVars
     error('Forza Verstappen')
 elseif max(sett.desVar.LB>=sett.desVar.UB) == 1 
     error('Forza Hamilton')
+end
+if mod(sett.cores.nCoresFine,2) 
+    error('Forza Sainz')
 end
