@@ -4,10 +4,10 @@
 # Name of the template .cfg file
 templateName="RANSTemplate.cfg"
 
-currAoA="$alpha"
-currMach="$mach"
-currRe="$re"
-	
+currAoA="$1"
+currMach="$2"
+currRe="$3"
+coreNumber=$4
 # Creating cfd folder inside case folder
 cfdFolderName="coarse_A""$currAoA""_M""$currMach"
 cfdFolderName="${cfdFolderName//"."/"_"}"
@@ -35,7 +35,7 @@ sed -i "s/MESH_OUT_FILENAME= mesh_out.su2/MESH_OUT_FILENAME= mesh_out_G${meshInd
     
 if [ $coreNumber -gt 1 ]
 then
-    mpirun --oversubscribe -n $coreNumber SU2_CFD $templateName  >"logG${cfdFolderName}.log"
+    mpirun --use-hwthread-cpus -n $coreNumber SU2_CFD $templateName  >"logG${cfdFolderName}.log"
 else
     SU2_CFD $templateName  >"logG${cfdFolderName}.log"
 fi

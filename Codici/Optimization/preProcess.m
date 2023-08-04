@@ -70,4 +70,4 @@ text(7) = "alphaFine="""+ num2str(alphaCorrectionPoint)+ """";
 text(8) = "machFine="""+ num2str(machCorrectionPoint)+ """";
 text(9) = "reFine="""+ num2str(reCorrectionPoint)+ """";
 text(10)= "outerCounterMax=" + num2str(outerCounterMax) ;
-writelines(text,'shellScripts\main.sh')
+writelines(text,'shellScripts\main.sh','LineEnding','\n')

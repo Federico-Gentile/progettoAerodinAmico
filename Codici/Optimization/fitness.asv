@@ -34,8 +34,7 @@ while true && flag == 0
     end  
 end
 %% Launch CFD simulation
-%system('start /B wsl ./shellScripts/main.sh')
-system('wsl ./shellScripts/main.sh &')
+system('start /B wsl ./shellScripts/main.sh')
 % system('launchSim.bat')
 end
 %% CFD Grid Creation
