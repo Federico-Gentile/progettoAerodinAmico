@@ -11,9 +11,10 @@ geoCreationRefBox(x_tip, sett.mesh, sett.mesh.h_coarse, "temporaryFiles/Gcoarse.
 
 % Mesh creation
 meshCommand = "gmsh -format su2 temporaryFiles/Gfine.geo -2 > temporaryFiles/fineMesh.log";
-system('start /B wsl ' + meshCommand);
+% system('start /B wsl ' + meshCommand);
+system('wsl ' + meshCommand);
 meshCommand = "gmsh -format su2 temporaryFiles/Gcoarse.geo -2 > temporaryFiles/coarseMesh.log";
-system('start /B wsl ' + meshCommand);
+system('wsl ' + meshCommand);
 
 % %% Blade root coefficients evaluation (XFOIL)
 % 
@@ -35,8 +36,9 @@ while true && flag == 0
 end
 %% Launch CFD simulation
 %system('start /B wsl ./shellScripts/main.sh')
-system('wsl ./shellScripts/main.sh &')
+system('wsl ./shellScripts/main.sh')
 % system('launchSim.bat')
+
 end
 %% CFD Grid Creation
 

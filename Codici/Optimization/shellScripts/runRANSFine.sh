@@ -35,7 +35,7 @@ sed -i "s/MESH_OUT_FILENAME= mesh_out.su2/MESH_OUT_FILENAME= mesh_out_G${meshInd
     
 if [ $nCoresFine -gt 1 ]
 then
-    mpirun --oversubscribe -n $nCoresFine SU2_CFD $templateName  >"logG${cfdFolderName}.log"
+    mpirun -bind-to socket --use-hwthread-cpus -n $nCoresFine SU2_CFD $templateName  >"logG${cfdFolderName}.log"
 else
     SU2_CFD $templateName  >"logG${cfdFolderName}.log"
 fi
@@ -71,7 +71,7 @@ sed -i "s/MESH_OUT_FILENAME= mesh_out.su2/MESH_OUT_FILENAME= mesh_out_G${meshInd
 sed -i "s%SOLUTION_FILENAME= solution_flow.dat%SOLUTION_FILENAME= ../${previousSolutionName}/restart_flow_${previousSolutionName}.dat%" $templateName 
 if [ $nCoresFine -gt 1 ]
 then
-    mpirun --use-hwthread-cpus -n $nCoresFine SU2_CFD $templateName  >"logG${cfdFolderName}.log"
+    mpirun -bind-to socket --use-hwthread-cpus -n $nCoresFine SU2_CFD $templateName  >"logG${cfdFolderName}.log"
 else
     SU2_CFD $templateName  >"logG${cfdFolderName}.log"
 fi

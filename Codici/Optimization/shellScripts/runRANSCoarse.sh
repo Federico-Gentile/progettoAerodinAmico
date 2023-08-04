@@ -19,7 +19,8 @@ mkdir "$cfdFolderName"
 cd "$cfdFolderName"
 
 # Copying simulation template# Copying template .cfg into cfd folder
-cp ../../configFiles/$templateName ./
+cp ../../configFiles/$templateName ./coarse_$templateName
+templateName="coarse_""$templateName"
 
 # Substituting mach, alpha, and Re
 sed -i "s/MACH_NUMBER= 0.7/MACH_NUMBER= ${currMach}/" $templateName
@@ -33,9 +34,11 @@ sed -i "s/VOLUME_FILENAME= flow/VOLUME_FILENAME= flow_${cfdFolderName}/" $templa
 sed -i "s/SURFACE_FILENAME= surface_flow/SURFACE_FILENAME= surface_flow_${cfdFolderName}/" $templateName
 sed -i "s/MESH_OUT_FILENAME= mesh_out.su2/MESH_OUT_FILENAME= mesh_out_G${meshIndex}.su2/" $templateName
     
-if [ $coreNumber -gt 1 ]
+if [ $coreNumber -gt 2 ]
 then
-    mpirun --use-hwthread-cpus -n $coreNumber SU2_CFD $templateName  >"logG${cfdFolderName}.log"
+    mpirun -bind-to socket --use-hwthread-cpus -n $coreNumber SU2_CFD $templateName  >"logG${cfdFolderName}.log"
 else
     SU2_CFD $templateName  >"logG${cfdFolderName}.log"
 fi
+
+cp "logG${cfdFolderName}.log" ../../imfinished/

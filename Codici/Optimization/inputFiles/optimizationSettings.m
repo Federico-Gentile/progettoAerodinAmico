@@ -37,7 +37,8 @@ sett.stencil.nMachCFD = 4;
 % nCores distribution
 sett.cores.nCores = 15;
 sett.cores.nCoresFine = 6;  % Must be even for MPIRUN restarting reasons
-sett.cores.nCoresCoarse = 2;
+sett.cores.nCoresCoarse = 4;
+
 %% Rotor solution settings
 % Blade type (0 rigid, 1 elastic)
 sett.rotSol.bladeType = 0;
@@ -65,11 +66,6 @@ sett.XFOIL.tgapFlag = 0; % very dangerous, leave it to 0
 sett.XFOIL.Ncrit = 4;
 sett.XFOIL.machRoot = linspace((rotData.cutout*rotData.omega/ambData.c), ((sett.desVar.switchPoint-sett.blending.A)*rotData.R*rotData.omega/ambData.c), 10); 
 sett.XFOIL.alphaRoot = 0:0.5:9; % deg
-
-%% RANS simulation setting
-sett.RANS.nproc = 2; % number of thread to run each RANS simulation
-sett.RANS.maxThr = 18; % maximum number of threads involved in the optimization
-sett.RANS.critPoint = [6, 0.6]; % [alpha, mach] point used for RANS correction
 
 %% Importing inflow data
 inflow = load("inflow.mat");
