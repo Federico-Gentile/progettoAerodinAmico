@@ -1,4 +1,3 @@
-
 %% Importing environment data
 environmentData;
 
@@ -35,7 +34,7 @@ sett.stencil.nAlphaCFD = 6;
 sett.stencil.nMachCFD = 4;
 
 % nCores distribution
-sett.shell.nCoresFine = 14;  % Must be even for MPIRUN restarting reasons
+sett.shell.nCoresFine = 16;  % Must be even for MPIRUN restarting reasons
 sett.shell.nCoresCoarse = 1;
 sett.shell.innerFirstIter = 12;
 
@@ -74,13 +73,12 @@ inflow.Finfl = griddedInterpolant(x', y', inflow.vi');
 sett.inflow = inflow;
 clearvars x y inflow
 
-%
 sett.ambData = ambData;
 clear ambData;
 sett.rotData = rotData;
 clear rotData;
 
-% Input checks
+%% Input checks
 if length(sett.desVar.LB) ~= length(sett.desVar.UB)
     error('Forza Latifi')
 elseif length(sett.desVar.LB) ~= sett.desVar.nVars

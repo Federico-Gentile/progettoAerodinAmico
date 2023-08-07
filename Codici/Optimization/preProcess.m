@@ -2,9 +2,17 @@ clc
 clear
 close all
 
+%% Reinitializing text files
+delete optimization_diary.txt
 
 %% Run setting
 optimizationSettings;
+optimizerSettings;
+
+sett.opt.historyFilename = sett.opt.historyFilename + "_" + strrep(strrep(strrep(string(datetime('now')),':','_'),' ','_'),'-','_');
+diary("histories\"+sett.opt.historyFilename+".txt");
+fprintf('iter\tx1\tx2\tx3\tx4\tx5\tx6\tx7\tx8\tnconv\tP\tcoll\tT\n');
+diary off
 
 %% Computing transition indexes
 [~,sett.rotSol.ind1] = min(abs(sett.rotSol.x-(sett.rotSol.tr-sett.blending.A*sett.rotData.R)));

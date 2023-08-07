@@ -60,7 +60,7 @@ for ii = 1:length(sett.XFOIL.machRoot)
         s_xfoil{ind_mach} = ['mach ' num2str(sett.XFOIL.machRoot(ii))];
         writelines(s_xfoil, "temporaryFiles\xfoil_input.txt")
     end    
-    system('.\XFOIL\xfoil.exe < temporaryFiles\xfoil_input.txt; exit')
+    system('.\XFOIL\xfoil.exe < temporaryFiles\xfoil_input.txt > temporaryFiles\xfoilLog.log; exit')
 
     % Extract data from polar.txt
     polar = readmatrix('polar.txt');
