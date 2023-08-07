@@ -5,6 +5,15 @@ close all
 
 %% Run setting
 optimizationSettings;
+
+%% Computing transition indexes
+[~,sett.rotSol.ind1] = min(abs(sett.rotSol.x-(sett.rotSol.tr-sett.blending.A*sett.rotData.R)));
+[~,sett.rotSol.ind2] = min(abs(sett.rotSol.x-(sett.rotSol.tr+sett.blending.A*sett.rotData.R)));
+
+% Cropping nodes
+sett.rotSol.x = sett.rotSol.x([1:sett.rotSol.ind1,sett.rotSol.ind2:end]);
+sett.rotSol.vi = interp1(sett.inflow.bladeStations, sett.inflow.Finfl(sett.inflow.bladeStations',sett.rotData.ACw*ones(1,length(sett.inflow.bladeStations))'), sett.rotSol.x, 'linear', 'extrap');
+
 %% Tentative rotor solution for CFD guess
 [out] = rotorSolution(sett, sett.aeroData);
 x = sett.rotSol.x;
@@ -58,3 +67,11 @@ text(9) = "alphaFine="""+ num2str(alphaCorrectionPoint)+ """";
 text(10) = "machFine="""+ num2str(machCorrectionPoint)+ """";
 text(11) = "reFine="""+ num2str(reCorrectionPoint)+ """";
 writelines(text,'shellScripts\main3.sh','LineEnding','\n')
+
+sett.stencil.alphaVec = alphaVec;
+sett.stencil.machVec = machVec;
+sett.stencil.alphaGridCFD = alphaGridCFD;
+sett.stencil.machGridCFD = machGridCFD;
+sett.stencil.alphaCorrectionPoint = alphaCorrectionPoint;
+sett.stencil.machCorrectionPoint = machCorrectionPoint;
+sett.stencil.indCorrectionPoint = indCorrectionPoint;

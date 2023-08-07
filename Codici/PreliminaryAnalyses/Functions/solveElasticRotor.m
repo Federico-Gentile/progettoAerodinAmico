@@ -8,13 +8,13 @@ mach = u / ambData.c;
 % Definition of alpha at query points [deg] ( w blade deformation contribution)
 aColl = currColl;
 aTwis = interp1(rotData.rTw, rotData.Twi, inp.x);
-aIndu = atan(vi./u);
+aIndu = atan(vi./u)*180/pi;
 
 ftosolve = @(q) elasticRotorDeformation(q, u, mach, aColl, aTwis, aIndu, rotData, inp, aeroData, structure, ambData);
 [qOut,~,exitFlag] = fsolve(ftosolve, inp.q0, inp.options);
 aThet = structure.ModesgtInterpolated' * qOut * 180/pi;
 
-alpha = aColl + aTwis + aThet - aIndu*180/pi;
+alpha = aColl + aTwis + aThet - aIndu;
 
 % Defining aerodynamic coefficients ad function of mach and AoA [deg]
 % mach and alpha are both column vectors of query points

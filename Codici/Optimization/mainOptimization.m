@@ -2,6 +2,7 @@ clear; close all; clc;
 
 %% Importing inputs
 preProcess;
+
 %% Optimization cycle
 
 % [x,fval,exitFlag,output] = particleswarm(@(x) fitness(x, sett), sett.desVar.nVars, sett.desVar.LB, sett.desVar.UB);
@@ -15,8 +16,16 @@ preProcess;
 % x = [0.21 0.25 0.290  3]; % profilo ape maia per test codice
 % x = [0.21 0.25 0.290 0.5]; % profilo goccia 1
 % x = [0.4 0.25 0.290 0.5]; % profilo goccia 2
- x_root = [0.3 0.12 0.4322 2.022];  % simile al NACA0012
- x_tip = [0.3 0.12 0.4322 2.022];
+
+%  x_root = [0.3 0.12 0.4322 2.022];  % simile al NACA0012
+%  x_tip = [0.3 0.12 0.4322 2.022];
+
+%  x_root = [ 0.4 0.25 0.29 0.5 ]; % G105
+%  x_tip = [ 0.4 0.25 0.29 0.5 ]; % G105
+
+%  x_root = [ 0.334590732839752,0.105356751786128,0.807968876579954,2.834983119393876 ]; % G106
+%  x_tip = [ 0.334590732839752,0.105356751786128,0.807968876579954,2.834983119393876 ]; % G106
+
  x = [ x_root, x_tip ];
 
-fitness(x, sett)
+P = fitness(x, sett);

@@ -37,14 +37,16 @@ end
 %% Launch CFD simulation
 system('wsl ./shellScripts/main3.sh')
 
+dummypause = 1;
+
 %% Extracting Cl, Cd, Cm from CFD results
-nCoarseSim = length(alphaVec)+1;
-clMat = zeros(size(alphaGridCFD));
-cdMat = zeros(size(alphaGridCFD));
-cmMat = zeros(size(alphaGridCFD));
+nCoarseSim = length(sett.stencil.alphaVec)+1;
+clMat = zeros(size(sett.stencil.alphaGridCFD));
+cdMat = zeros(size(sett.stencil.alphaGridCFD));
+cmMat = zeros(size(sett.stencil.alphaGridCFD));
 for ii = 1:nCoarseSim
-    currAlpha = alphaGridCFD(ii);
-    currMach  = machGridCFD(ii);
+    currAlpha = sett.stencil.alphaGridCFD(ii);
+    currMach  = sett.stencil.machGridCFD(ii);
     tempString = "coarse_A" + strrep(num2str(currAlpha),'.','_') + "_M" + strrep(num2str(currMach),'.','_');
     history = readmatrix("CFDFiles\" + tempString + "\history_" + tempString);
     cdMat(ii) = history(end,10);
@@ -52,25 +54,25 @@ for ii = 1:nCoarseSim
     cmMat(ii) = history(end,15);
 end
 % Fine sim coeffs extraction
-tempString = "fine_A" + strrep(num2str(alphaCorrectionPoint),'.','_') + "_M" + strrep(num2str(machCorrectionPoint),'.','_');
+tempString = "fine_A" + strrep(num2str(sett.stencil.alphaCorrectionPoint),'.','_') + "_M" + strrep(num2str(sett.stencil.machCorrectionPoint),'.','_');
 history = readmatrix("CFDFiles\" + tempString + "\history_" + tempString);
 cdFine = history(end,10);
 clFine = history(end,11);
 cmFine = history(end,15);
 
 %% Correction 
-ratioCd = cdFine/cdMat(indCorrectionPoint);
-ratioCl = clFine/clMat(indCorrectionPoint);
-ratioCm = cmFine/cmMat(indCorrectionPoint);
+ratioCd = cdFine/cdMat(sett.stencil.indCorrectionPoint);
+ratioCl = clFine/clMat(sett.stencil.indCorrectionPoint);
+ratioCm = cmFine/cmMat(sett.stencil.indCorrectionPoint);
 
 cdMat = cdMat * ratioCd;
 clMat = clMat * ratioCl;
 cmMat = cmMat * ratioCm;
 
 % Gridded Interpolant Creation for the tip airfoil
-aeroData{2}.cd = griddedInterpolant(machGridCFD, alphaGridCFD, cdMat, 'linear');
-aeroData{2}.cl = griddedInterpolant(machGridCFD, alphaGridCFD, clMat, 'linear');
-aeroData{2}.cm = griddedInterpolant(machGridCFD, alphaGridCFD, cmMat, 'linear');
+aeroData{2}.cd = griddedInterpolant(sett.stencil.machGridCFD', sett.stencil.alphaGridCFD', cdMat', 'linear');
+aeroData{2}.cl = griddedInterpolant(sett.stencil.machGridCFD', sett.stencil.alphaGridCFD', clMat', 'linear');
+aeroData{2}.cm = griddedInterpolant(sett.stencil.machGridCFD', sett.stencil.alphaGridCFD', cmMat', 'linear');
 
 %% Rotor Power Evaluation
 [out] = rotorSolution(sett, aeroData);

@@ -1,2 +1,2 @@
-
-start /B wsl mpirun ./shellScripts/main.sh
+@echo off
+start /B wsl mpirun ./main.sh

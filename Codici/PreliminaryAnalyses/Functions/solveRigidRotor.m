@@ -8,8 +8,8 @@ mach = u / ambData.c;
 % Definition of alpha at query points [deg]
 aColl = currColl;
 aTwis = interp1(rotData.rTw, rotData.Twi, inp.x);
-aIndu = atan(vi./u);
-alpha = aColl + aTwis - aIndu*180/pi;
+aIndu = atan(vi./u)*180/pi;
+alpha = aColl + aTwis - aIndu;
 
 % Defining aerodynamic coefficients ad function of mach and AoA [deg]
 % mach and alpha are both column vectors of query points

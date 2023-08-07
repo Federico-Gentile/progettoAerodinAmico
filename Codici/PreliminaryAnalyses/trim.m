@@ -11,14 +11,14 @@ environmentData;
 rotorData;
 
 % Importing aerodynamic data (use naca0012_CFD.mat as template)
-inp.aeroDataset = 'G106_RANS.mat';
+inp.aeroDataset = 'naca0012_RANS.mat';
 
 % Aircraft weights list
-inp.targetACw = [50358.1360806500
-                 67892.2562789325
-                 76844.5887707531
-                 85499.0933112012
-                 93746.8741853770];
+inp.targetACw = [55000;
+                 65000;
+                 75000;
+                 85000;
+                 95000];
 
 % Collective [deg] and inflow velocity [m/s] initial guesses (+fsolve ops)
 inp.momentumTheory = 0;

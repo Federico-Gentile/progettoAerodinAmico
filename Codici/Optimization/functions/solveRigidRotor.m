@@ -1,23 +1,20 @@
 function [f] = solveRigidRotor(coll, outFlag, sett, aeroData)
 %SOLVEROTOR solves rotor induced velocity problem
 
-[~,ind] = min(abs(sett.rotSol.x-sett.rotSol.tr));
-
 % Definition of mach at query points [-]
 u = sqrt( (sett.rotData.omega*sett.rotSol.x).^2 + sett.rotSol.vi.^2 );
 mach = u / sett.ambData.c;
 
-
 % Definition of alpha at query points [deg]
 aColl = coll;
 aTwis = interp1(sett.rotData.rTw, sett.rotData.Twi, sett.rotSol.x);
-aIndu = atan(sett.rotSol.vi./u);
-alpha = aColl + aTwis + aIndu*180/pi;
+aIndu = atan(sett.rotSol.vi./u)*180/pi;
+alpha = aColl + aTwis + aIndu;
 
-mach_root = mach(1:ind);
-alpha_root = alpha(1:ind);
-mach_tip = mach(ind+1:end);
-alpha_tip = alpha(ind+1:end);
+mach_root = mach(1:sett.rotSol.ind1);
+alpha_root = alpha(1:sett.rotSol.ind1);
+mach_tip = mach(sett.rotSol.ind1+1:end);
+alpha_tip = alpha(sett.rotSol.ind1+1:end);
 
 % Defining aerodynamic coefficients ad function of mach and AoA [deg]
 % mach and alpha are both column vectors of query points
@@ -29,7 +26,7 @@ L = 0.5 * sett.ambData.rho * u.^2 .* sett.rotData.c .* cl;
 D = 0.5 * sett.ambData.rho * u.^2 .* sett.rotData.c .* cd;
 
 % Retireving forces in hub reference [N]
-Fz = L.*cos(aIndu*pi/180) - D.*sin(aIndu*pi/180);
+Fz = L.*cos(-aIndu*pi/180) - D.*sin(-aIndu*pi/180);
 
 % Integration along the blade for integral loads [N]
 T = 4*trapz(sett.rotSol.x, Fz);
@@ -50,7 +47,7 @@ if outFlag
     out.D = D;
     out.M = 0.5 * sett.ambData.rho * u.^2 .* sett.rotData.c .* out.cm;
     out.Fz = Fz;
-    out.Fx = L.*sin(aIndu*pi/180) + D.*cos(aIndu*pi/180);
+    out.Fx = L.*sin(-aIndu*pi/180) + D.*cos(-aIndu*pi/180);
     out.T = T;
     out.Q = 4*trapz(sett.rotSol.x, out.Fx.*sett.rotSol.x); 
     out.P = out.Q * sett.rotData.omega * 0.00134102;

@@ -1,8 +1,5 @@
 function [out] = rotorSolution(sett, aeroData)
 
-% Retrieving load computation points position [m]
-sett.rotSol.vi = interp1(sett.inflow.bladeStations, sett.inflow.Finfl(sett.inflow.bladeStations',sett.rotData.ACw*ones(1,length(sett.inflow.bladeStations))'), sett.rotSol.x, 'linear', 'extrap');
-
 % Running elastic blade structure
 if max(sett.rotSol.bladeType) == 1
     % Initial guess for elastic rotor
