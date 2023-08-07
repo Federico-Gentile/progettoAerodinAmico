@@ -16,17 +16,17 @@ system('wsl ' + meshCommand);
 meshCommand = "gmsh -format su2 temporaryFiles/Gcoarse.geo -2 > temporaryFiles/coarseMesh.log";
 system('wsl ' + meshCommand);
 
-% %% Blade root coefficients evaluation (XFOIL)
-% 
-% % Airfoil creation
-% airfoilCoordinatesXFOIL(x_root);
-% 
-% % Airfoil polar computation
-% out_xfoil_root = runXFOIL(sett);
-% 
-% aeroData{1}.cl = out_xfoil_root.Cl;
-% aeroData{1}.cd = out_xfoil_root.Cd;
-% aeroData{1}.cm = out_xfoil_root.Cm;
+%% Blade root coefficients evaluation (XFOIL)
+
+% Airfoil creation
+airfoilCoordinatesXFOIL(x_root);
+
+% Airfoil polar computation
+out_xfoil_root = runXFOIL(sett);
+
+aeroData{1}.cl = out_xfoil_root.Cl;
+aeroData{1}.cd = out_xfoil_root.Cd;
+aeroData{1}.cm = out_xfoil_root.Cm;
 
 flag = 0;
 while true && flag == 0

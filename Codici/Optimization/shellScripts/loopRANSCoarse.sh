@@ -8,7 +8,7 @@ echo ${alphaVec[@]}
 outerCounter=$5
 nCoresCoarse=$6
 coreNumber=$nCoresCoarse
-seqEnd=$((${innerIterVec[$outerCounter]} - 1))
+seqEnd=$((${innerIterVec[$outerCounter-1]} - 1))
 for innerCounter in $(seq 0 $seqEnd); do	
     alpha=${alphaVec[$innerCounter]}
     mach=${machVec[$innerCounter]}
@@ -17,5 +17,5 @@ for innerCounter in $(seq 0 $seqEnd); do
     echo $alpha
     echo $mach
     echo $re
-    ./shellScripts/runRANSCoarse.sh $alpha $mach $re $coreNumber &
+    time ./shellScripts/runRANSCoarse.sh $alpha $mach $re $coreNumber &
 done

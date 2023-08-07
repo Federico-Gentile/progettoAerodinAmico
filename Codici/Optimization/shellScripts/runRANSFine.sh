@@ -35,7 +35,7 @@ sed -i "s/MESH_OUT_FILENAME= mesh_out.su2/MESH_OUT_FILENAME= mesh_out_G${meshInd
     
 if [ $nCoresFine -gt 1 ]
 then
-    mpirun -bind-to socket --use-hwthread-cpus -n $nCoresFine SU2_CFD $templateName  >"logG${cfdFolderName}.log"
+    time mpirun -bind-to socket --use-hwthread-cpus -n $nCoresFine SU2_CFD $templateName  >"logG${cfdFolderName}.log"
 else
     SU2_CFD $templateName  >"logG${cfdFolderName}.log"
 fi

@@ -36,8 +36,8 @@ sett.stencil.nMachCFD = 4;
 
 % nCores distribution
 sett.cores.nCores = 15;
-sett.cores.nCoresFine = 6;  % Must be even for MPIRUN restarting reasons
-sett.cores.nCoresCoarse = 4;
+sett.cores.nCoresFine = 4;  % Must be even for MPIRUN restarting reasons
+sett.cores.nCoresCoarse = 1;
 
 %% Rotor solution settings
 % Blade type (0 rigid, 1 elastic)

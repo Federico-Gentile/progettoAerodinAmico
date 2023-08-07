@@ -34,7 +34,7 @@ sed -i "s/VOLUME_FILENAME= flow/VOLUME_FILENAME= flow_${cfdFolderName}/" $templa
 sed -i "s/SURFACE_FILENAME= surface_flow/SURFACE_FILENAME= surface_flow_${cfdFolderName}/" $templateName
 sed -i "s/MESH_OUT_FILENAME= mesh_out.su2/MESH_OUT_FILENAME= mesh_out_G${meshIndex}.su2/" $templateName
     
-if [ $coreNumber -gt 2 ]
+if [ $coreNumber -gt 1 ]
 then
     mpirun -bind-to socket --use-hwthread-cpus -n $coreNumber SU2_CFD $templateName  >"logG${cfdFolderName}.log"
 else
