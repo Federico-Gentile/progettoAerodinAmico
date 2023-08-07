@@ -83,3 +83,6 @@ sett.stencil.machGridCFD = machGridCFD;
 sett.stencil.alphaCorrectionPoint = alphaCorrectionPoint;
 sett.stencil.machCorrectionPoint = machCorrectionPoint;
 sett.stencil.indCorrectionPoint = indCorrectionPoint;
+
+%% Initializing fitness evaluations counter
+sett.optIter = 0;
