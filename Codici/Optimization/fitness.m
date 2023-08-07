@@ -38,7 +38,7 @@ while true && flag == 0
     end  
 end
 %% Launch CFD simulation
-system('wsl ./shellScript5s/main3.sh > temporaryFiles/ransLog.log')
+system('wsl ./shellScripts/main3.sh > temporaryFiles/ransLog.log')
 
 %% Extracting Cl, Cd, Cm from CFD results
 nCoarseSim = length(sett.stencil.alphaVec)+1;
