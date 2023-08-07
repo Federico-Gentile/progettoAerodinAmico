@@ -35,13 +35,6 @@ else
     machVec  = machVec([1:(indCorrectionPoint-1), (indCorrectionPoint+1):end]);
 end
 
-%% Cores distribution over tasks
-remainingCores  = sett.cores.nCores - sett.cores.nCoresFine;
-ransCoarsePerRound = floor(remainingCores/sett.cores.nCoresCoarse);
-outerCounterMax = ceil(length(alphaVec)/ransCoarsePerRound);
-innerIterVec = repmat(ransCoarsePerRound, outerCounterMax - 1, 1);
-innerIterVec = [innerIterVec;length(alphaVec) - sum(innerIterVec)];
-
 %% main.sh configuration
 reVec = sett.ambData.rho * sett.rotData.c * machVec * sett.ambData.c/ sett.ambData.mu;
 reCorrectionPoint = sett.ambData.rho * sett.rotData.c * machCorrectionPoint * sett.ambData.c/ sett.ambData.mu;
@@ -53,21 +46,15 @@ for ii = 1:length(alphaVec)
     tempStringMach  = tempStringMach + """" + num2str(machVec(ii)) + """ " ;
     tempStringRe    = tempStringRe + """" + num2str(reVec(ii)) + """ " ;
 end
-tempStringInner    = "";
-for ii = 1:length(innerIterVec)
-    tempStringInner = tempStringInner + """" + num2str(innerIterVec(ii)) + """ " ;
-end
 
-
-text = readlines('shellScripts\main.sh');
-text(1) = "alphaGlobalVec=("+ tempStringAlpha + ")";
-text(2) = "machGlobalVec=("+ tempStringMach + ")";
-text(3) = "reGlobalVec=("+ tempStringRe + ")";
-text(4) = "nCoresCoarse="+ num2str(sett.cores.nCoresCoarse);
-text(5) = "nCoresFine="+ num2str(sett.cores.nCoresFine);
-text(6) = "innerIterVec=("+ tempStringInner + ")";
-text(7) = "alphaFine="""+ num2str(alphaCorrectionPoint)+ """";
-text(8) = "machFine="""+ num2str(machCorrectionPoint)+ """";
-text(9) = "reFine="""+ num2str(reCorrectionPoint)+ """";
-text(10)= "outerCounterMax=" + num2str(outerCounterMax) ;
-writelines(text,'shellScripts\main.sh','LineEnding','\n')
+text = readlines('shellScripts\main3.sh');
+text(3) = "alphaGlobalVec=("+ tempStringAlpha + ")";
+text(4) = "machGlobalVec=("+ tempStringMach + ")";
+text(5) = "reGlobalVec=("+ tempStringRe + ")";
+text(6) = "nCoresCoarse="+ num2str(sett.shell.nCoresCoarse);
+text(7) = "nCoresFine="+ num2str(sett.shell.nCoresFine);
+text(8) = "innerFirstIter=" + num2str(sett.shell.innerFirstIter);
+text(9) = "alphaFine="""+ num2str(alphaCorrectionPoint)+ """";
+text(10) = "machFine="""+ num2str(machCorrectionPoint)+ """";
+text(11) = "reFine="""+ num2str(reCorrectionPoint)+ """";
+writelines(text,'shellScripts\main3.sh','LineEnding','\n')

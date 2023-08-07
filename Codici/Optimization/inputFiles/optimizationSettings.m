@@ -35,9 +35,10 @@ sett.stencil.nAlphaCFD = 6;
 sett.stencil.nMachCFD = 4;
 
 % nCores distribution
-sett.cores.nCores = 15;
-sett.cores.nCoresFine = 4;  % Must be even for MPIRUN restarting reasons
-sett.cores.nCoresCoarse = 1;
+sett.shell.nCores = 15;
+sett.shell.nCoresFine = 14;  % Must be even for MPIRUN restarting reasons
+sett.shell.nCoresCoarse = 1;
+sett.shell.innerFirstIter = 12;
 
 %% Rotor solution settings
 % Blade type (0 rigid, 1 elastic)
@@ -88,6 +89,6 @@ elseif length(sett.desVar.LB) ~= sett.desVar.nVars
 elseif max(sett.desVar.LB>=sett.desVar.UB) == 1 
     error('Forza Hamilton')
 end
-if mod(sett.cores.nCoresFine,2) 
+if mod(sett.shell.nCoresFine,2) 
     error('Forza Sainz')
 end
