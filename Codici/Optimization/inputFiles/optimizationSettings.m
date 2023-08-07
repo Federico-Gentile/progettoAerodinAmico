@@ -18,7 +18,7 @@ sett.desVar.nVars = 8;
 
 %% RANS stencil creation
 % Importing NACA0012 RANS results
-load('G105_RANS.mat')
+load('naca0012_RANS.mat')
 cl = griddedInterpolant(MACH_Cl', ANGLE_Cl', Cl');
 cd = griddedInterpolant(MACH_Cd', ANGLE_Cd', Cd');
 cm = griddedInterpolant(MACH_Cm', ANGLE_Cm', Cm');
