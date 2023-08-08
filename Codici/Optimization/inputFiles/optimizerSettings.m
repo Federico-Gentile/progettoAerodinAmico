@@ -1,5 +1,5 @@
 %% Optimizer ID
-sett.opt.ID = 'SU';
+sett.opt.ID = 'PSO';
 
 switch sett.opt.ID
     case 'PSO'

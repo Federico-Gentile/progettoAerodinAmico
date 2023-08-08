@@ -1,7 +1,7 @@
 load temporaryFiles/rootAirfoil.txt
 pane
 ppar
-N 200
+N 110
 
 
 oper
