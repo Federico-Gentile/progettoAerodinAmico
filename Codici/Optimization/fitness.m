@@ -1,8 +1,6 @@
 function P = fitness(x, sett)
 clc;
 
-sett.optIter = sett.optIter + 1;
-
 x_root = x(1:4);
 x_tip = x(5:8);
 
@@ -81,7 +79,7 @@ P = out.P;
 
 %% Updating history file for current optimization run
 diary("histories\"+sett.opt.historyFilename+".txt")
-fprintf("%i\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%.2f\t%.2f\t%.2f\t%.2f", sett.optIter, x(1), x(2), x(3), x(4), x(5), x(6), x(7), x(8), sum(out_xfoil_root.nConv)/size(out_xfoil_root.criticalMat,1)*size(out_xfoil_root.criticalMat,2), out.P, out.coll, out.T);
+fprintf("%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%.2f\t%.2f\t%.2f\t%.2f\n",x(1), x(2), x(3), x(4), x(5), x(6), x(7), x(8), sum(out_xfoil_root.nConv)/size(out_xfoil_root.criticalMat,1)*size(out_xfoil_root.criticalMat,2), out.P, out.coll, out.T);
 diary off
 
 end

@@ -17,8 +17,12 @@ switch sett.opt.ID
         [xOpt, fval, exitFlag, output] = particleswarm(@(x) fitness(x, sett), sett.desVar.nVars, sett.desVar.LB, sett.desVar.UB, options);
     case 'GA'
         error('Not implemented')
+
     case 'SU'
-        error('Not implemented')
+        options = optimoptions('surrogateopt', 'CheckpointFile',  sett.opt.checkPointFile, ...
+                               'MaxFunctionEvaluations', sett.opt.maxFunctionEvaluations, ...
+                               'MaxTime', sett.opt.maxTime);
+       [x,fval,exitflag,output,trials] = surrogateopt(@(x) fitness(x, sett), sett.desVar.LB, sett.desVar.UB, [],[],[],[],[], options);
 end
 
 %% Testing   x = [XT,T,rho0,betaTE]

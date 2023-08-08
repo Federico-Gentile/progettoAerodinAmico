@@ -34,7 +34,7 @@ sett.stencil.nAlphaCFD = 6;
 sett.stencil.nMachCFD = 4;
 
 % nCores distribution
-sett.shell.nCoresFine = 16;  % Must be even for MPIRUN restarting reasons
+sett.shell.nCoresFine = 14;  % Must be even for MPIRUN restarting reasons
 sett.shell.nCoresCoarse = 1;
 sett.shell.innerFirstIter = 12;
 

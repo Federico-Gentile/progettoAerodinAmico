@@ -1,5 +1,5 @@
 %% Optimizer ID
-sett.opt.ID = 'PSO';
+sett.opt.ID = 'SU';
 
 switch sett.opt.ID
     case 'PSO'
@@ -26,5 +26,8 @@ switch sett.opt.ID
     case 'GA'
 
     case 'SU'
-
+        sett.opt.historyFilename = 'SU_history';
+        sett.opt.checkPointFile =  'checkPointFile.mat';
+        sett.opt.maxFunctionEvaluations = max(200,50*sett.desVar.nVars);
+        sett.opt.maxTime = 32400;
 end
