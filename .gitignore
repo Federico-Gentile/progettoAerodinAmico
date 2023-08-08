@@ -400,3 +400,4 @@ Codici/Optimization/setPath.m
 Codici/Optimization/CFDFiles/*
 Codici/Optimization/histories/*
 Codici/Optimization/temporaryFiles/*
+Codici/Optimization/temporaryFiles/xfoil_input.txt
