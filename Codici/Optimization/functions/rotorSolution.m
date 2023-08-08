@@ -22,8 +22,10 @@ elseif sett.rotSol.bladeType(ii) == 1
 end
 
 ftozeroTrim = @(coll) solveRotor(coll, 0);
-currColl = fsolve(ftozeroTrim, collGuess, sett.rotSol.options);
+[currColl, fval, exitflag] = fsolve(ftozeroTrim, collGuess, sett.rotSol.options);
 out = solveRotor(currColl, 1);
 out.coll = currColl;
+out.ftosolveVal = fval;
+out.exitflag = exitflag;
 
 end

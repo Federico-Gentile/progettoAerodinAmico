@@ -1,4 +1,4 @@
-function P = fitness(x, sett)
+function [P, out, out_xfoil_root] = fitness(x, sett)
 clc;
 
 x_root = x(1:4);
@@ -24,6 +24,18 @@ airfoilCoordinatesXFOIL(x_root);
 
 % Airfoil polar computation
 out_xfoil_root = runXFOIL(sett);
+
+% If XFOIL has failed to converge to a physical solution
+if out_xfoil_root.failXFOIL ~= 0
+    P = sett.penaltyPower;
+    out.P = P;
+    out.T = NaN;
+    out.alpha = NaN;
+    out.coll = NaN;
+    out.exitflag = NaN;
+    updateDiary(x, out_xfoil_root, out, sett);
+    return
+end
 
 aeroData{1}.cl = out_xfoil_root.Cl;
 aeroData{1}.cd = out_xfoil_root.Cd;
@@ -75,11 +87,17 @@ aeroData{2}.cm = griddedInterpolant(sett.stencil.machGridCFD', sett.stencil.alph
 
 %% Rotor Power Evaluation
 [out] = rotorSolution(sett, aeroData);
-P = out.P;
+out.aeroData{1} = aeroData{1}; 
+out.aeroData{2} = aeroData{2}; 
+
+if out.exitflag > 0
+    P = out.P;
+else
+    P = sett.penaltyPower;
+    out.P = penaltyPower;
+end
 
 %% Updating history file for current optimization run
-diary("histories\"+sett.opt.historyFilename+".txt")
-fprintf("%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%.2f\t%.2f\t%.2f\t%.2f\n",x(1), x(2), x(3), x(4), x(5), x(6), x(7), x(8), sum(out_xfoil_root.nConv)/size(out_xfoil_root.criticalMat,1)*size(out_xfoil_root.criticalMat,2), out.P, out.coll, out.T);
-diary off
+updateDiary(x, out_xfoil_root, out, sett);
 
 end

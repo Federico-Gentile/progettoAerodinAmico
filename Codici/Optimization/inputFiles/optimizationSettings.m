@@ -60,11 +60,12 @@ sett.mesh.R = 60;           % A value of R=60 is suggested for both domain indep
 sett.mesh.BLflag = 1;       % 0 = No BL (Euler)   1 = BL (RANS)
 
 %% XFOIL settings
-sett.XFOIL.Npane = 200;
+sett.XFOIL.Npane = 110;
 sett.XFOIL.tgapFlag = 0; % very dangerous, leave it to 0
 sett.XFOIL.Ncrit = 4; % dirty wind tunnel 4:8 (fonte sconosciuta)
 sett.XFOIL.machRoot = linspace((rotData.cutout*rotData.omega/ambData.c), ((sett.desVar.switchPoint-sett.blending.A)*rotData.R*rotData.omega/ambData.c), 10); 
 sett.XFOIL.alphaRoot = 0:0.5:5.5; % deg
+sett.XFOIL.killTime = 10;
 
 %% Importing inflow data
 inflow = load("inflow.mat");
@@ -77,6 +78,9 @@ sett.ambData = ambData;
 clear ambData;
 sett.rotData = rotData;
 clear rotData;
+
+%% Penalty power value assigned to non converged profiles
+sett.penaltyPower = 3000;
 
 %% Input checks
 if length(sett.desVar.LB) ~= length(sett.desVar.UB)

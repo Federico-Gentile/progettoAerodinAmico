@@ -11,7 +11,7 @@ optimizerSettings;
 
 sett.opt.historyFilename = sett.opt.historyFilename + "_" + strrep(strrep(strrep(string(datetime('now')),':','_'),' ','_'),'-','_');
 diary("histories\"+sett.opt.historyFilename+".txt");
-fprintf('x1\tx2\tx3\tx4\tx5\tx6\tx7\tx8\tnconv\tP\tcoll\tT\n');
+fprintf('x1\tx2\tx3\tx4\tx5\tx6\tx7\tx8\tnconv\tP\tcoll\tT\tminAoA\tmaxAoA\tfailXFOIL\ttrimExitFlag\n');
 diary off
 
 %% Computing transition indexes
@@ -83,4 +83,3 @@ sett.stencil.machGridCFD = machGridCFD;
 sett.stencil.alphaCorrectionPoint = alphaCorrectionPoint;
 sett.stencil.machCorrectionPoint = machCorrectionPoint;
 sett.stencil.indCorrectionPoint = indCorrectionPoint;
-

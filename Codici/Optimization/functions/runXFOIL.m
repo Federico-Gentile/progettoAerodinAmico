@@ -59,8 +59,30 @@ for ii = 1:length(sett.XFOIL.machRoot)
         s_xfoil{ind_re} = ['re ' num2str(Re)];
         s_xfoil{ind_mach} = ['mach ' num2str(sett.XFOIL.machRoot(ii))];
         writelines(s_xfoil, "temporaryFiles\xfoil_input.txt")
-    end    
-    system('.\XFOIL\xfoil.exe < temporaryFiles\xfoil_input.txt > temporaryFiles\xfoilLog.log; exit')
+    end   
+   
+    xfoilIsRunning = 1;
+    system('start /B .\XFOIL\xfoil.exe < temporaryFiles\xfoil_input.txt > temporaryFiles\xfoilLog.log');
+    while xfoilIsRunning == 1
+        delete temporaryFiles\xfoilExecutionTime.log
+        system('powershell New-TimeSpan -Start (Get-Process xfoil).StartTime > temporaryFiles\xfoilExecutionTime.log');
+        lines = readlines('temporaryFiles\xfoilExecutionTime.log');
+        if size(lines,1)==1
+            % XFOIL process is finished
+            xfoilIsRunning = 0;
+        else
+            xfoilRunTime = char(lines(6));
+            xfoilRunTime = str2double(xfoilRunTime(21:end));
+            if xfoilRunTime > sett.XFOIL.killTime
+                out.criticalMat = zeros(size(MACH_GRID));
+                out.failXFOIL = 2;
+                out.nConv = nConv;
+                system('Taskkill /F /IM xfoil.exe');
+                delete polar.txt
+                return
+            end
+        end
+    end
 
     % Extract data from polar.txt
     polar = readmatrix('polar.txt');
@@ -71,6 +93,19 @@ for ii = 1:length(sett.XFOIL.machRoot)
     V_cd = [V_cd; polar(:, 3)]; %#ok<AGROW> 
     V_cm = [V_cm; polar(:, 5)]; %#ok<AGROW> 
     V_cpmin = [V_cpmin; polar(:, 6)]; %#ok<AGROW> 
+
+    % Checking cl behavior
+    if max(V_cl(polar(:, 1)>0)<0) == 1 || max(polar(2:end, 2)<polar(1:end-1, 2)) == 1
+        % Excluding solutions with:
+        % - negative cl at positive alpha
+        % - non monotonic cl behavior wrt to aoa (either non converged
+        % solution or early stall airfoil)
+        out.criticalMat = zeros(size(MACH_GRID));
+        out.nConv = nConv;
+        out.failXFOIL = 1;
+        delete polar.txt
+        return
+    end
 
     % Delete current polar.txt
     delete polar.txt    
@@ -95,7 +130,13 @@ criticalMat = Cpmin_root < Cpsonic(MACH_GRID);
 out.Cl = F_cl;
 out.Cd = F_cd;
 out.Cm = F_cm;
+out.V_cl = V_cl;
+out.V_cd = V_cd;
+out.V_cm = V_cm;
+out.alpha = Y;
+out.mach = X;
 out.nConv = nConv;
 out.criticalMat = criticalMat;
+out.failXFOIL = 0;
 
 end
