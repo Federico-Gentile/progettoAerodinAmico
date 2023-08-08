@@ -94,7 +94,7 @@ if out.exitflag > 0
     P = out.P;
 else
     P = sett.penaltyPower;
-    out.P = penaltyPower;
+    out.P = P;
 end
 
 %% Updating history file for current optimization run

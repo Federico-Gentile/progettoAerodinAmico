@@ -22,7 +22,7 @@ switch sett.opt.ID
         options = optimoptions('surrogateopt', 'CheckpointFile',  sett.opt.checkPointFile, ...
                                'MaxFunctionEvaluations', sett.opt.maxFunctionEvaluations, ...
                                'MaxTime', sett.opt.maxTime);
-       [x,fval,exitflag,output,trials] = surrogateopt(@(x) fitness(x, sett), sett.desVar.LB, sett.desVar.UB, [],[],[],[],[], options)
+       [x,fval,exitflag,output,trials] = surrogateopt(@(x) fitness(x, sett), sett.desVar.LB, sett.desVar.UB, [],[],[],[],[], options);
        %[x,fval,exitflag,output,trials] = surrogateopt("checkPointFile.mat", options);
        save('workspace.mat')
 end
