@@ -28,6 +28,6 @@ switch sett.opt.ID
     case 'SU'
         sett.opt.historyFilename = 'SU_history';
         sett.opt.checkPointFile =  'checkPointFile.mat';
-        sett.opt.maxFunctionEvaluations = max(200,50*sett.desVar.nVars);
-        sett.opt.maxTime = 32400;
+        sett.opt.maxFunctionEvaluations = max(100,50*sett.desVar.nVars);
+        sett.opt.maxTime = inf;
 end

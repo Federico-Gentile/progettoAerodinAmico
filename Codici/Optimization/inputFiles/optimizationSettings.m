@@ -65,7 +65,7 @@ sett.XFOIL.tgapFlag = 0; % very dangerous, leave it to 0
 sett.XFOIL.Ncrit = 4; % dirty wind tunnel 4:8 (fonte sconosciuta)
 sett.XFOIL.machRoot = linspace((rotData.cutout*rotData.omega/ambData.c), ((sett.desVar.switchPoint-sett.blending.A)*rotData.R*rotData.omega/ambData.c), 10); 
 sett.XFOIL.alphaRoot = 0:0.5:5.5; % deg
-sett.XFOIL.killTime = 10;
+sett.XFOIL.killTime = 15;
 
 %% Importing inflow data
 inflow = load("inflow.mat");

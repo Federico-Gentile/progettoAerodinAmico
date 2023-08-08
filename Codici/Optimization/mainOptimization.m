@@ -22,7 +22,9 @@ switch sett.opt.ID
         options = optimoptions('surrogateopt', 'CheckpointFile',  sett.opt.checkPointFile, ...
                                'MaxFunctionEvaluations', sett.opt.maxFunctionEvaluations, ...
                                'MaxTime', sett.opt.maxTime);
-       [x,fval,exitflag,output,trials] = surrogateopt(@(x) fitness(x, sett), sett.desVar.LB, sett.desVar.UB, [],[],[],[],[], options);
+       [x,fval,exitflag,output,trials] = surrogateopt(@(x) fitness(x, sett), sett.desVar.LB, sett.desVar.UB, [],[],[],[],[], options)
+       %[x,fval,exitflag,output,trials] = surrogateopt("checkPointFile.mat", options);
+       save('workspace.mat')
 end
 
 %% Testing   x = [XT,T,rho0,betaTE]
@@ -45,7 +47,7 @@ end
 % x_tip = [ 0.334590732839752,0.105356751786128,0.807968876579954,2.834983119393876 ]; % G106
 
 % x = [0.340633	0.182205	0.761005	3.000000	0.210000	0.198494	0.751872	2.165094]; % profilo 1 debuggato
-% x = [0.352547	0.178457	0.677464	1.286552	0.344831	t0.142781	0.891129	2.520701]; % profilo 2 debuggato
+% x = [0.352547	0.178457	0.677464	1.286552	0.344831	0.142781	0.891129	2.520701]; %  profilo 2 debuggato
 % 
 % [P, out, out_xfoil_root] = fitness(x, sett);
 
