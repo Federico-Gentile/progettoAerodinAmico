@@ -396,4 +396,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-Codici/setPath.m
+Codici/Optimization/setPath.m
+Codici/Optimization/CFDFiles/*
+Codici/Optimization/histories/*
+Codici/Optimization/temporaryFiles/*
