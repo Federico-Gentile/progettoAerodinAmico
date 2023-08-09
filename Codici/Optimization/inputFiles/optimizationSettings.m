@@ -11,8 +11,8 @@ sett.blending.A = 0.02; % amplitude of the blending region (over rotor radius)
 %% Design variable data
 sett.desVar.switchPoint = 0.8;
 sett.desVar.switchMach = sett.desVar.switchPoint*rotData.R*rotData.omega/ambData.c;
-sett.desVar.LB = [ 0.21 0.07 0.290  0.5 0.21 0.07 0.290  0.5 ]; % From Bortolotti
-sett.desVar.UB = [ 0.4  0.25    0.9   3 0.4  0.25    0.9   3 ]; % From Bortolotti
+sett.desVar.LB = [ 0.2   0.08  0.175  0.5  0.17  0.08  0.175  0.5 ]; % From Bortolotti
+sett.desVar.UB = [ 0.45  0.25  0.9    2.5  0.45  0.25  0.9    2.5 ]; 
 sett.desVar.nVars = 8;
 
 %% RANS stencil creation
@@ -34,7 +34,7 @@ sett.stencil.nAlphaCFD = 6;
 sett.stencil.nMachCFD = 4;
 
 % nCores distribution
-sett.shell.nCoresFine = 16;  % Must be even for MPIRUN restarting reasons
+sett.shell.nCoresFine = 14;  % Must be even for MPIRUN restarting reasons
 sett.shell.nCoresCoarse = 1;
 sett.shell.innerFirstIter = 12;
 
@@ -64,8 +64,10 @@ sett.XFOIL.Npane = 110;
 sett.XFOIL.tgapFlag = 0; % very dangerous, leave it to 0
 sett.XFOIL.Ncrit = 4; % dirty wind tunnel 4:8 (fonte sconosciuta)
 sett.XFOIL.machRoot = linspace((rotData.cutout*rotData.omega/ambData.c), ((sett.desVar.switchPoint-sett.blending.A)*rotData.R*rotData.omega/ambData.c), 10); 
-sett.XFOIL.alphaRoot = 0:0.5:5.5; % deg
+sett.XFOIL.alphaRoot = 0:0.5:7; % deg
 sett.XFOIL.killTime = 15;
+sett.XFOIL.alphaCheck = 5;   
+sett.XFOIL.thresholdCl = 0.35;   % Cl min required at alpha = 5°. 0.35 is conservative, 0.4 is less conservative
 
 %% Importing inflow data
 inflow = load("inflow.mat");
@@ -80,7 +82,8 @@ sett.rotData = rotData;
 clear rotData;
 
 %% Penalty power value assigned to non converged profiles
-sett.penaltyPower = 3000;
+sett.collCheck = 18; % [°] Chosen considering worst converged profile at 17° and good profiles at 15°
+sett.penaltyPower = 2800;  % Same magnitude of the worst converged fitness values
 
 %% Input checks
 if length(sett.desVar.LB) ~= length(sett.desVar.UB)

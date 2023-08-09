@@ -11,7 +11,7 @@ optimizerSettings;
 
 sett.opt.historyFilename = sett.opt.historyFilename + "_" + strrep(strrep(strrep(string(datetime('now')),':','_'),' ','_'),'-','_');
 diary("histories\"+sett.opt.historyFilename+".txt");
-fprintf('x1\tx2\tx3\tx4\tx5\tx6\tx7\tx8\tnconv\tP\tcoll\tT\tminAoA\tmaxAoA\tfailXFOIL\ttrimExitFlag\n');
+fprintf('x1\tx2\tx3\tx4\tx5\tx6\tx7\tx8\tnconv\tP\tcoll\tT\tminAoA\tmaxAoA\tfailXFOIL\ttrimExitFlag\tsonic\textrapFlagXFOIL\textrapFlagRANS\tClAtMidSpan\tCdAtMidSpan\tClAtAlphaMax\tCdAtAlphaMax\n');
 diary off
 
 %% Computing transition indexes
@@ -28,7 +28,7 @@ x = sett.rotSol.x;
 [~, ind] = min(abs(x - (sett.desVar.switchPoint + sett.blending.A)*sett.rotData.R));
 indexMachCFD = ceil(linspace(ind, length(x), sett.stencil.nMachCFD));
 machGridCFD = repmat(out.mach(indexMachCFD)', sett.stencil.nAlphaCFD, 1);
-alphaGridCFD = repmat(linspace(min(out.alpha)-0.6, max(out.alpha)+0.6, sett.stencil.nAlphaCFD),sett.stencil.nMachCFD,1)';
+alphaGridCFD = repmat(linspace(min(out.alpha)-0.8, max(out.alpha)+1.1, sett.stencil.nAlphaCFD),sett.stencil.nMachCFD,1)';
 machVec = reshape(machGridCFD, [], 1);
 alphaVec = reshape(alphaGridCFD, [], 1);
 

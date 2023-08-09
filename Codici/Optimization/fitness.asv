@@ -48,7 +48,7 @@ while true && flag == 0
     end  
 end
 %% Launch CFD simulation
-% system('wsl ./shellScripts/main3.sh > temporaryFiles/ransLog.log')
+system('wsl ./shellScripts/main3.sh > temporaryFiles/ransLog.log')
 
 %% Extracting Cl, Cd, Cm from CFD results
 nCoarseSim = length(sett.stencil.alphaVec)+1;
@@ -111,16 +111,8 @@ else
 end
 
 %% Extraction of coefficients of interest
-
-% RANS point
 [~, indAlphaMax] = max(out.alpha);  
-out.ClAtAlphaMax = out.cl(indAlphaMax);
-out.CdAtAlphaMax = out.cd(indAlphaMax);
-
-% XFOIL point
-[~, indMidSpan] = min(abs(sett.rotSol.x - (sett.rotSol.x(1) + (sett.rotSol.x(end) - sett.rotSol.x(1))/2)));
-out.ClAtMidSpan = out.cl(indMidSpan);
-out.CdAtMidSpan = out.cd(indMidSpan);
+out.ClAtAlphaMax = out.cl(indAlp);
 %% Updating history file for current optimization run
 updateDiary(x, out_xfoil_root, out, sett);
 

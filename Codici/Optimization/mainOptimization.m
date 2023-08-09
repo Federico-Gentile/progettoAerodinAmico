@@ -4,28 +4,28 @@ clear; close all; clc;
 preProcess;
 
 %% Optimization cycle
-
-switch sett.opt.ID
-    case 'PSO'
-        options = optimoptions('particleswarm','FunctionTolerance', sett.opt.functionTolerance,...
-                                'FunValCheck', sett.opt.funValCheck,...
-                                'MaxIterations', sett.opt.maxIterations,...
-                                'MaxStallIterations', sett.opt.maxStallIterations,...
-                                'MaxStallTime', sett.opt.maxStallTime,...
-                                'MaxTime', sett.opt.maxTime,...
-                                'SwarmSize', sett.opt.swarmSize);
-        [xOpt, fval, exitFlag, output] = particleswarm(@(x) fitness(x, sett), sett.desVar.nVars, sett.desVar.LB, sett.desVar.UB, options);
-    case 'GA'
-        error('Not implemented')
-
-    case 'SU'
-        options = optimoptions('surrogateopt', 'CheckpointFile',  sett.opt.checkPointFile, ...
-                               'MaxFunctionEvaluations', sett.opt.maxFunctionEvaluations, ...
-                               'MaxTime', sett.opt.maxTime);
-       [x,fval,exitflag,output,trials] = surrogateopt(@(x) fitness(x, sett), sett.desVar.LB, sett.desVar.UB, [],[],[],[],[], options);
-       %[x,fval,exitflag,output,trials] = surrogateopt("checkPointFile.mat", options);
-       save('workspace.mat')
-end
+% 
+% switch sett.opt.ID
+%     case 'PSO'
+%         options = optimoptions('particleswarm','FunctionTolerance', sett.opt.functionTolerance,...
+%                                 'FunValCheck', sett.opt.funValCheck,...
+%                                 'MaxIterations', sett.opt.maxIterations,...
+%                                 'MaxStallIterations', sett.opt.maxStallIterations,...
+%                                 'MaxStallTime', sett.opt.maxStallTime,...
+%                                 'MaxTime', sett.opt.maxTime,...
+%                                 'SwarmSize', sett.opt.swarmSize);
+%         [xOpt, fval, exitFlag, output] = particleswarm(@(x) fitness(x, sett), sett.desVar.nVars, sett.desVar.LB, sett.desVar.UB, options);
+%     case 'GA'
+%         error('Not implemented')
+% 
+%     case 'SU'
+%         options = optimoptions('surrogateopt', 'CheckpointFile',  sett.opt.checkPointFile, ...
+%                                'MaxFunctionEvaluations', sett.opt.maxFunctionEvaluations, ...
+%                                'MaxTime', sett.opt.maxTime);
+%        %[x,fval,exitflag,output,trials] = surrogateopt(@(x) fitness(x, sett), sett.desVar.LB, sett.desVar.UB, [],[],[],[],[], options);
+%        [x,fval,exitflag,output,trials] = surrogateopt("checkPointFile.mat", options);
+%        save('workspace.mat')
+% end
 
 %% Testing   x = [XT,T,rho0,betaTE]
 % Upper and lower limits proposed by S. Bortolotti thesis
@@ -49,6 +49,7 @@ end
 % x = [0.340633	0.182205	0.761005	3.000000	0.210000	0.198494	0.751872	2.165094]; % profilo 1 debuggato
 % x = [0.352547	0.178457	0.677464	1.286552	0.344831	0.142781	0.891129	2.520701]; %  profilo 2 debuggato
 % 
+% x = [0.21 0.1509 0.29 0.5 0.3114 0.1115 0.29 0.7319];
 % [P, out, out_xfoil_root] = fitness(x, sett);
 
 % close all; 
