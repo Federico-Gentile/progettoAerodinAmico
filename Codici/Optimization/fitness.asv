@@ -33,6 +33,9 @@ if out_xfoil_root.failXFOIL ~= 0
     out.alpha = NaN;
     out.coll = NaN;
     out.exitflag = NaN;
+    out.extrapFlagXFOIL = NaN;
+    out.extrapFlagRANS = NaN;
+    out.ClAtAlpha
     updateDiary(x, out_xfoil_root, out, sett);
     return
 end
@@ -111,8 +114,16 @@ else
 end
 
 %% Extraction of coefficients of interest
+
+% RANS point
 [~, indAlphaMax] = max(out.alpha);  
-out.ClAtAlphaMax = out.cl(indAlp);
+out.ClAtAlphaMax = out.cl(indAlphaMax);
+out.CdAtAlphaMax = out.cd(indAlphaMax);
+
+% XFOIL point
+[~, indMidSpan] = min(abs(sett.rotSol.x - (sett.rotSol.x(1) + (sett.rotSol.x(end) - sett.rotSol.x(1))/2)));
+out.ClAtMidSpan = out.cl(indMidSpan);
+out.CdAtMidSpan = out.cd(indMidSpan);
 %% Updating history file for current optimization run
 updateDiary(x, out_xfoil_root, out, sett);
 

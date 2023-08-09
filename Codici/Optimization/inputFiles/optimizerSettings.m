@@ -30,5 +30,5 @@ switch sett.opt.ID
         sett.opt.checkPointFile =  'checkPointFile.mat';
         sett.opt.maxFunctionEvaluations = max(400,50*sett.desVar.nVars);
         sett.opt.maxTime = inf;
-        sett.opt.minSurrPoints = 80;
+        sett.opt.minSurrPoints = 40;
 end

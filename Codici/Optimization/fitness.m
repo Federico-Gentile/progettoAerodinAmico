@@ -33,6 +33,12 @@ if out_xfoil_root.failXFOIL ~= 0
     out.alpha = NaN;
     out.coll = NaN;
     out.exitflag = NaN;
+    out.extrapFlagXFOIL = NaN;
+    out.extrapFlagRANS = NaN;
+    out.ClAtAlphaMax = NaN;
+    out.CdAtAlphaMax = NaN;
+    out.ClAtMidSpan = NaN;
+    out.CdAtMidSpan = NaN;
     updateDiary(x, out_xfoil_root, out, sett);
     return
 end
@@ -48,7 +54,7 @@ while true && flag == 0
     end  
 end
 %% Launch CFD simulation
-% system('wsl ./shellScripts/main3.sh > temporaryFiles/ransLog.log')
+system('wsl ./shellScripts/main3.sh > temporaryFiles/ransLog.log')
 
 %% Extracting Cl, Cd, Cm from CFD results
 nCoarseSim = length(sett.stencil.alphaVec)+1;
