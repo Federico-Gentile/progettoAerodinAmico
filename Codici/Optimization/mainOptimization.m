@@ -1,6 +1,6 @@
 clear; close all; clc;
 
-%% Importing inputs
+% %% Importing inputs
 preProcess;
 
 % Optimization cycle
@@ -23,8 +23,8 @@ switch sett.opt.ID
                                'MaxFunctionEvaluations', sett.opt.maxFunctionEvaluations, ...
                                'MaxTime', sett.opt.maxTime, ...
                                'MinSurrogatePoints', sett.opt.minSurrPoints);
-       [x,fval,exitflag,output,trials] = surrogateopt(@(x) fitness(x, sett), sett.desVar.LB, sett.desVar.UB, [],[],[],[],[], options);
-       %[x,fval,exitflag,output,trials] = surrogateopt("checkPointFile.mat", options);
+       %[x,fval,exitflag,output,trials] = surrogateopt(@(x) fitness(x, sett), sett.desVar.LB, sett.desVar.UB, [],[],[],[],[], options);
+       [x,fval,exitflag,output,trials] = surrogateopt("checkPointFile.mat", options);
        save('workspace.mat')
 end
 

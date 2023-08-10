@@ -68,7 +68,7 @@ sett.XFOIL.alphaRoot = 0:0.5:7; % deg
 sett.XFOIL.killTime = 15;
 sett.XFOIL.alphaCheck = 5;   
 sett.XFOIL.thresholdCl = 0.35;   % Cl min required at alpha = 5°. 0.35 is conservative, 0.4 is less conservative
-
+sett.XFOIL.thresholdClSlope = sett.XFOIL.thresholdCl/(sett.XFOIL.alphaCheck * pi/180);
 %% Importing inflow data
 inflow = load("inflow.mat");
 [x,y] = meshgrid(inflow.bladeStations, inflow.Wac);

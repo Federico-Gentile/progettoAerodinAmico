@@ -93,10 +93,12 @@ for ii = 1:length(sett.XFOIL.machRoot)
     V_cd = [V_cd; polar(:, 3)]; %#ok<AGROW> 
     V_cm = [V_cm; polar(:, 5)]; %#ok<AGROW> 
     V_cpmin = [V_cpmin; polar(:, 6)]; %#ok<AGROW> 
-    [~,indCheck] = min(abs(sett.XFOIL.alphaRoot - sett.XFOIL.alphaCheck));
-
-    if size(polar,1) >= indCheck
-        if polar(indCheck, 2) < sett.XFOIL.thresholdCl
+    
+    if size(polar,1) >= 2 && ii == 1
+        P = polyfit(polar(:,1)*pi/180, polar(:,2), 1);      
+        slope = P(1);
+        if slope < sett.XFOIL.thresholdClSlope
+            % Excluding airfoils with shitty polar slope
             out.criticalMat = zeros(size(MACH_GRID));
             out.nConv = nConv;
             out.failXFOIL = 1;

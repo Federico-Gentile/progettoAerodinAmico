@@ -403,3 +403,5 @@ Codici/Optimization/temporaryFiles/*
 
 Codici/Optimization/shellScripts/*
 Codici/Optimization/surrogateRuns
+Codici/Optimization/workspace.mat
+Codici/Optimization/checkPointFile.mat
