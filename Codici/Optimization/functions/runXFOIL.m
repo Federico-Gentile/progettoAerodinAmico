@@ -75,7 +75,7 @@ for ii = 1:length(sett.XFOIL.machRoot)
             xfoilRunTime = str2double(xfoilRunTime(21:end));
             if xfoilRunTime > sett.XFOIL.killTime
                 out.criticalMat = zeros(size(MACH_GRID));
-                out.failXFOIL = 2;
+                out.failXFOIL = 4;
                 out.nConv = nConv;
                 system('Taskkill /F /IM xfoil.exe');
                 delete polar.txt
@@ -94,15 +94,34 @@ for ii = 1:length(sett.XFOIL.machRoot)
     V_cm = [V_cm; polar(:, 5)]; %#ok<AGROW> 
     V_cpmin = [V_cpmin; polar(:, 6)]; %#ok<AGROW> 
     [~,indCheck] = min(abs(sett.XFOIL.alphaRoot - sett.XFOIL.alphaCheck));
+
+    if size(polar,1) >= indCheck
+        if polar(indCheck, 2) < sett.XFOIL.thresholdCl
+            out.criticalMat = zeros(size(MACH_GRID));
+            out.nConv = nConv;
+            out.failXFOIL = 1;
+            delete polar.txt
+            return
+        end
+    end
     % Checking cl behavior
-    if max(V_cl(polar(:, 1)>0)<0) == 1 || max(polar(2:end, 2)<polar(1:end-1, 2)) == 1 || polar(indCheck, 2) < sett.XFOIL.thresholdCl
+    if max(V_cl(polar(:, 1)>0)<0) == 1
         % Excluding solutions with:
         % - negative cl at positive alpha
+        out.criticalMat = zeros(size(MACH_GRID));
+        out.nConv = nConv;
+        out.failXFOIL = 2;
+        delete polar.txt
+        return
+    end
+    % Checking cl behavior
+    if max(polar(2:end, 2)<polar(1:end-1, 2)) == 1 
+        % Excluding solutions with:
         % - non monotonic cl behavior wrt to aoa (either non converged
         % solution or early stall airfoil)
         out.criticalMat = zeros(size(MACH_GRID));
         out.nConv = nConv;
-        out.failXFOIL = 1;
+        out.failXFOIL = 3;
         delete polar.txt
         return
     end
