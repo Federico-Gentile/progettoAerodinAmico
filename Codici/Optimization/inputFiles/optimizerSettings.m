@@ -1,5 +1,5 @@
 %% Optimizer ID
-sett.opt.ID = 'SU';
+sett.opt.ID = 'PSO';
 
 switch sett.opt.ID
     case 'PSO'
@@ -8,10 +8,11 @@ switch sett.opt.ID
 
         % Initial swarn generation function
         % either 'random' or 'reinitialize'   
-        % sett.opt.startingSwarm = 'random';
+        sett.opt.startingSwarm = readmatrix('histories\PSO_history_10_Aug_2023_01_02_32.txt');
+        sett.opt.startingSwarm = sett.opt.startingSwarm(1:60,1:8); % 60 cause it's dallo's swarm
         
         % Swarm size
-        sett.opt.swarmSize = 40;
+        sett.opt.swarmSize = 60;
 
         % Exit criteria
         sett.opt.functionTolerance = 1e-6;
