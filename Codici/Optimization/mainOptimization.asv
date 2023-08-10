@@ -20,26 +20,32 @@ switch sett.opt.ID
 
     case 'SU'
         switch sett.opt.runType 
-            case 'Normal'
+            case 'normal'
                         options = optimoptions('surrogateopt', 'CheckpointFile',  sett.opt.checkPointFile, ...
                                'MaxFunctionEvaluations', sett.opt.maxFunctionEvaluations, ...
                                'MaxTime', sett.opt.maxTime, ...
                                'MinSurrogatePoints', sett.opt.minSurrPoints);
                         [x,fval,exitflag,output,trials] = surrogateopt(@(x) fitness(x, sett), sett.desVar.LB, sett.desVar.UB, [],[],[],[],[], options);
                         save('workspace.mat')
-            case 'Trials'
+            case 'checkPoint'
                         options = optimoptions('surrogateopt', 'CheckpointFile',  sett.opt.checkPointFile, ...
                                'MaxFunctionEvaluations', sett.opt.maxFunctionEvaluations, ...
                                'MaxTime', sett.opt.maxTime, ...
                                'MinSurrogatePoints', sett.opt.minSurrPoints);
                         [x,fval,exitflag,output,trials] = surrogateopt("checkPointFile.mat", options);
-                save('workspace.mat')
-        end
+                        save('workspace.mat')
+            case 'trials'
+                        load('workspace.mat')
+                        sett.opt.initialPoints = trials;
+                        options = optimoptions('surrogateopt', 'CheckpointFile',  sett.opt.checkPointFile, ...
+                               'MaxFunctionEvaluations', sett.opt.maxFunctionEvaluations, ...
+                               'MaxTime', sett.opt.maxTime, ...
+                               'MinSurrogatePoints', sett.opt.minSurrPoints, ...
+                               'InitialPoints', sett.opt.initialPoints);
+                        [x,fval,exitflag,output,trials] = surrogateopt(@(x) fitness(x, sett), sett.desVar.LB, sett.desVar.UB, [],[],[],[],[], options);
+                        save('workspace.mat')
 
-       %[x,fval,exitflag,output,trials] = surrogateopt(@(x) fitness(x, sett), sett.desVar.LB, sett.desVar.UB, [],[],[],[],[], options);
-       %[x,fval,exitflag,output,trials] = surrogateopt("checkPointFile.mat", options);
-       
-       save('workspace.mat')
+        end
 end
 
 %% Testing   x = [XT,T,rho0,betaTE]

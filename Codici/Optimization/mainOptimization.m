@@ -35,7 +35,7 @@ switch sett.opt.ID
                         [x,fval,exitflag,output,trials] = surrogateopt("checkPointFile.mat", options);
                         save('workspace.mat')
             case 'trials'
-                        load('workspace.mat')
+                        load('trials.mat')
                         sett.opt.initialPoints = trials;
                         options = optimoptions('surrogateopt', 'CheckpointFile',  sett.opt.checkPointFile, ...
                                'MaxFunctionEvaluations', sett.opt.maxFunctionEvaluations, ...
