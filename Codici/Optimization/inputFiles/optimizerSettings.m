@@ -1,5 +1,5 @@
 %% Optimizer ID
-sett.opt.ID = 'PSO';
+sett.opt.ID = 'GB';
 
 switch sett.opt.ID
     case 'PSO'
@@ -8,11 +8,11 @@ switch sett.opt.ID
 
         % Initial swarn generation function
         % either 'random' or 'reinitialize'   
-        sett.opt.startingSwarm = readmatrix('histories\PSO_history_10_Aug_2023_01_02_32.txt');
-        sett.opt.startingSwarm = sett.opt.startingSwarm(1:60,1:8); % 60 cause it's dallo's swarm
+        sett.opt.startingSwarm = readmatrix('histories\PSO_history_15_Aug_2023_02_11_43.txt');
+        sett.opt.startingSwarm = sett.opt.startingSwarm((480-119):480,1:8); % 60 cause it's dallo's swarm
         
         % Swarm size
-        sett.opt.swarmSize = 60;
+        sett.opt.swarmSize = 120;
 
         % Exit criteria
         sett.opt.functionTolerance = 1e-6;
@@ -33,4 +33,9 @@ switch sett.opt.ID
         sett.opt.maxFunctionEvaluations = max(400,50*sett.desVar.nVars);
         sett.opt.maxTime = inf;
         sett.opt.minSurrPoints = 40;
+
+    case 'GB'
+        % History filename
+        sett.opt.historyFilename = 'FMINCON_history';
+
 end

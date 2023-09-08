@@ -86,16 +86,9 @@ for ii = 1:length(sett.XFOIL.machRoot)
 
     % Extract data from polar.txt
     polar = readmatrix('polar.txt');
-    nConv(ii) = length(polar(:, 1));
-    Y = [Y; polar(:, 1)]; %#ok<AGROW> 
-    X = [X; sett.XFOIL.machRoot(ii)*ones(nConv(ii), 1)]; %#ok<AGROW> 
-    V_cl = [V_cl; polar(:, 2)]; %#ok<AGROW> 
-    V_cd = [V_cd; polar(:, 3)]; %#ok<AGROW> 
-    V_cm = [V_cm; polar(:, 5)]; %#ok<AGROW> 
-    V_cpmin = [V_cpmin; polar(:, 6)]; %#ok<AGROW> 
-    
+
     % Checking if there is any NaN in polar before doing anything else
-    if anynan(polar(:,[2,3,5,6]))
+    if anynan(polar(:,:))
         % Excluding solutions with:
         % NaN
         out.criticalMat = zeros(size(MACH_GRID));
@@ -104,6 +97,16 @@ for ii = 1:length(sett.XFOIL.machRoot)
         delete polar.txt
         return
     end
+    
+    nConv(ii) = length(polar(:, 1));
+    Y = [Y; polar(:, 1)]; %#ok<AGROW> 
+    X = [X; sett.XFOIL.machRoot(ii)*ones(nConv(ii), 1)]; %#ok<AGROW> 
+    V_cl = [V_cl; polar(:, 2)]; %#ok<AGROW> 
+    V_cd = [V_cd; polar(:, 3)]; %#ok<AGROW> 
+    V_cm = [V_cm; polar(:, 5)]; %#ok<AGROW> 
+    V_cpmin = [V_cpmin; polar(:, 6)]; %#ok<AGROW> 
+    
+    
 
     if size(polar,1) >= 2 && ii == 1
         P = polyfit(polar(:,1)*pi/180, polar(:,2), 1);      
