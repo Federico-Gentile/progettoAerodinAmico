@@ -29,7 +29,7 @@ else
 end
 
 if inp.momentumTheory == 0
-    load(inp.inflowDataset);
+    load('inflow.mat');
     inflow.Wac = Wac;
     inflow.bladeStations = bladeStations;
     inflow.vi = -vi;

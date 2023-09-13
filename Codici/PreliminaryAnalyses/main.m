@@ -3,6 +3,9 @@ addpath('Functions\');
 
 %% User defined inputs
 
+% Momentum theory flag
+inp.momentumTheory = 0;
+
 % Blade root collectives list [deg]
 inp.collList = [ 12.5 13 13.5 14 ];
 
@@ -51,7 +54,7 @@ clearvars -except inp rotData ambData aeroData structure
 
 % Initializing outputs
 results = struct();
-[Tvec, Qvec, Pvec, viVec, timeVec] = deal(zeros(length(inp.collList),1));
+[Tvec, Qvec, Pvec, viVec, timeVec, exitflag] = deal(zeros(length(inp.collList),1));
 
 for ii = 1:length(inp.collList)
     currColl = inp.collList(ii);
@@ -70,13 +73,13 @@ for ii = 1:length(inp.collList)
         tic
         [currVi, ~, exitFlag] = fsolve(@(vi) ftozero(vi, 0), inp.vi(ii), inp.options);
         runTime = toc;
-        if exitFlag == 1
-            [f, out] = ftozero(currVi, 1);
-            out.f = f;
-            out.vi = currVi;
-            out.runTime = runTime;
-            results.(currFieldName) = out;
-        end
+
+        [f, out] = ftozero(currVi, 1);
+        out.f = f;
+        out.vi = currVi;
+        out.runTime = runTime;
+        out.exitflag = exitFlag;
+        results.(currFieldName) = out;
     else
         % Applying user defined inflow
         if inp.bladeType(ii) == 0
@@ -97,11 +100,12 @@ for ii = 1:length(inp.collList)
     Pvec(ii) = results.(currFieldName).P;
     viVec(ii) = results.(currFieldName).vi;
     timeVec(ii) = results.(currFieldName).runTime;
+    exitflag(ii) = results.(currFieldName).exitflag;
     rowNames(ii) = currFieldName;
 end
 
-outTab = array2table([Tvec, Qvec, Pvec, inp.inflowType, viVec, inp.bladeType, timeVec]);
-outTab.Properties.VariableNames = ["T [N]", "Q [Nm]", "P [hp]", "Real Infl?", "v_i [m/s]", "Elas?", "runTime"];
+outTab = array2table([Tvec, Qvec, Pvec, inp.inflowType, viVec, inp.bladeType, timeVec, exitflag]);
+outTab.Properties.VariableNames = ["T [N]", "Q [Nm]", "P [hp]", "Real Infl?", "v_i [m/s]", "Elas?", "runTime", "fsolveExitFlag"];
 outTab.Properties.RowNames = rowNames;
 outTab %#ok<NOPTS> 
 

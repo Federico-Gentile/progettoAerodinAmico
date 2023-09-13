@@ -7,19 +7,10 @@ addpath('Scripts');
 % Template Name 
 C1_RANS;
 
-% Figure options
-opts.plotFigure = 1;
-
-% Graphical options
-
 %% Richardson Analysis
 
 dataProcessing;
 
-%% Plot section
-if opts.plotFigure
-    plotFigure;
-end
 
 
 

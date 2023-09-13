@@ -22,10 +22,9 @@ inp.targetACw = [55000;
 
 % Collective [deg] and inflow velocity [m/s] initial guesses (+fsolve ops)
 inp.momentumTheory = 0;
-inp.coll0 = 11;
-inp.vi0 = 10;
+inp.coll0 = 10;
+inp.vi0 = 10.97;
 inp.options = optimoptions('fsolve', 'Display', 'off');
-inp.inflowDataset = 'inflow.mat';
 
 % Number of sections along the blade for loads computation (for rigid
 % rotor)

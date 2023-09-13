@@ -28,7 +28,7 @@ Fz = L.*cos(aIndu*pi/180) - D.*sin(aIndu*pi/180);
 T = 4*trapz(inp.x, Fz);
 
 % Inflow equation to be solved [m/s]
-if momentumTheory
+if inp.momentumTheory
     f = sqrt(T/(2*ambData.rho*rotData.Ad)) - vi;
 else
     f = 0;
