@@ -10,25 +10,30 @@ addpath('Data/'); addpath('Functions\');
 environmentData;
 rotorData;
 
-% Importing aerodynamic data (use naca0012_CFD.mat as template)
-inp.aeroDataset = 'naca0012_RANS.mat';
-
 % Aircraft weights list
-inp.targetACw = [55000;
-                 65000;
-                 75000;
-                 85000;
+inp.targetACw = [55000
+                 65000
+                 75000
+                 85000
                  95000];
 
+% Inflow type 
+% 1 for uniform inflow (computed with classic momentum theory)
+% 0 for variable inflow (imported from dust) value in [m/s]
+inp.uniformInflow = 0;
+
+% Importing aerodynamic data (use naca0012_CFD.mat as template)
+inp.aeroDataset = 'naca0012_RANS.mat';
+importAero;
+
 % Collective [deg] and inflow velocity [m/s] initial guesses (+fsolve ops)
-inp.momentumTheory = 0;
-inp.coll0 = 10;
-inp.vi0 = 10.97;
+inp.coll0 = 10.5;
+inp.vi0 = 14;
 inp.options = optimoptions('fsolve', 'Display', 'off');
 
 % Number of sections along the blade for loads computation (for rigid
 % rotor)
-inp.Nsega = 500;
+inp.Nsega = 100;
 
 % Plot options
 inp.plotResults = 1;
@@ -36,8 +41,6 @@ inp.fontSize = 12;
 inp.lineWidth = 2;
 
 %% Computations
-
-importAero;
 
 % Retrieving load computation points position [m]
 inp.x = linspace(rotData.cutout, rotData.R, inp.Nsega)';
@@ -54,17 +57,6 @@ if max(inp.bladeType) == 1
     end
 end
 
-clearvars -except inp rotData ambData aeroData structure inflow
-
-% Generating inflow lookup
-if inp.momentumTheory
-    viGuess = inp.vi0;
-else
-    [x,y] = meshgrid(inflow.bladeStations, inflow.Wac);
-    inflow.Finfl = griddedInterpolant(x', y', inflow.vi');
-    clearvars x y
-end
-
 % Initializing outputs
 results = struct();
 collGuess = inp.coll0;
@@ -72,27 +64,27 @@ collGuess = inp.coll0;
 [Qvec, Pvec, viVec, collVec] = deal(zeros(length(inp.bladeType), length(inp.targetACw)));
 
 for ii = 1:length(inp.bladeType)
-    if inp.bladeType(ii) == 0
-        currBladeName = "RigidBlade";
-    elseif inp.bladeType(ii) == 1
-        currBladeName = "ElasticBlade";
-    end
     
-    switch currBladeName
-        case 'RigidBlade'
-            ftozeroInflow = @(vi, outFlag, currColl) solveRigidRotor(vi, outFlag, currColl, inp, ambData, rotData, aeroData, inp.momentumTheory);
-        case 'ElasticBlade'
-            ftozeroInflow = @(vi, outFlag, currColl) solveElasticRotor(vi, outFlag, currColl, inp, ambData, rotData, aeroData, structure, inp.momentumTheory);
+    % Defining blade type
+    if inp.bladeType(ii) == 0
+        currBladeName = 'RigidBlade';
+        ftozeroInflow = @(vi, outFlag, currColl) solveRigidRotor(vi, outFlag, currColl, inp, ambData, rotData, aeroData, inp.uniformInflow);
+    elseif inp.bladeType(ii) == 1
+        currBladeName = 'ElasticBlade';
+        ftozeroInflow = @(vi, outFlag, currColl) solveElasticRotor(vi, outFlag, currColl, inp, ambData, rotData, aeroData, structure, inp.uniformInflow);
     end
 
     for jj = 1:length(inp.targetACw)
         currACw = inp.targetACw(jj);
 
-        if inp.momentumTheory == 0
-            viGuess = inflow.Finfl(inp.x,currACw*ones(size(inp.x)));
+        if inp.uniformInflow % If uniform inflow, we apply the user defined guess
+            viGuess = inp.vi0; 
+        else % If DUST inflow, we compute distribution at current ACw
+            viGuess = inflow.FinflowWac(repmat(currACw, length(inp.x), 1), inp.x);
         end
-
-        ftozeroTrim = @(coll) solveTrim(coll, ftozeroInflow, viGuess, currACw, inp, inp.momentumTheory);
+        
+        % Solving trim equation
+        ftozeroTrim = @(coll) solveTrim(coll, ftozeroInflow, viGuess, currACw, inp);
         currColl = fsolve(ftozeroTrim, collGuess, inp.options);
         [~, out] = ftozeroTrim(currColl);
         out.coll = currColl;
@@ -101,7 +93,7 @@ for ii = 1:length(inp.bladeType)
         results.(currBladeName).("ACw_"+num2str(jj, '%i')) = out;
         Qvec(ii,jj) = out.Q;
         Pvec(ii,jj) = out.P;
-        if inp.momentumTheory
+        if inp.uniformInflow
             viVec(ii,jj) = out.vi;
         end
         collVec(ii,jj) = out.coll;

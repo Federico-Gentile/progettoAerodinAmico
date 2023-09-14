@@ -1,4 +1,4 @@
-function [f, out] = solveRigidRotor(vi, outFlag, currColl, inp, ambData, rotData, aeroData, momentumTheory)
+function [f, out] = solveRigidRotor(vi, outFlag, currColl, inp, ambData, rotData, aeroData, uniformInflow)
 %SOLVEROTOR solves rotor induced velocity problem
 
 % Definition of mach at query points [-]
@@ -13,11 +13,9 @@ alpha = aColl + aTwis - aIndu;
 
 % Defining aerodynamic coefficients ad function of mach and AoA [deg]
 % mach and alpha are both column vectors of query points
-Fcl = griddedInterpolant(aeroData.mach_cl', aeroData.angle_cl', aeroData.cl', 'spline');
-Fcd = griddedInterpolant(aeroData.mach_cd', aeroData.angle_cd', aeroData.cd', 'spline');
 [machq, alphaq] = meshgrid(mach, alpha);
-cl = diag(Fcl(machq', alphaq'));
-cd = diag(Fcd(machq', alphaq'));
+cl = diag(aeroData.Fcl(machq', alphaq'));
+cd = diag(aeroData.Fcd(machq', alphaq'));
 L = 0.5 * ambData.rho * u.^2 .* rotData.c .* cl;
 D = 0.5 * ambData.rho * u.^2 .* rotData.c .* cd;
 
@@ -28,7 +26,7 @@ Fz = L.*cos(aIndu*pi/180) - D.*sin(aIndu*pi/180);
 T = 4*trapz(inp.x, Fz);
 
 % Inflow equation to be solved [m/s]
-if inp.momentumTheory
+if uniformInflow
     f = sqrt(T/(2*ambData.rho*rotData.Ad)) - vi;
 else
     f = 0;

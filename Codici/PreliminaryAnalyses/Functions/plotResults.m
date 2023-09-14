@@ -2,9 +2,9 @@ figure(1);
 
 for ii = 1:length(inp.collList)
     currColl = inp.collList(ii);
-    if inp.inflowType(ii) == 0
+    if inp.uniformInflow(ii) == 0
         lineType = '--';
-    elseif inp.inflowType(ii) == 1
+    elseif inp.uniformInflow(ii) == 1
         lineType = '-';
     end
 
@@ -78,9 +78,9 @@ figure(2);
 
 for ii = 1:length(inp.collList)
     currColl = inp.collList(ii);
-    if inp.inflowType(ii) == 0
+    if inp.uniformInflow(ii) == 0
         lineType = '--';
-    elseif inp.inflowType(ii) == 1
+    elseif inp.uniformInflow(ii) == 1
         lineType = '-';
     end
 
@@ -100,6 +100,26 @@ for ii = 1:length(inp.collList)
     ylabel('$M$ [Nm]', 'Interpreter', 'latex');
     legend('Location','best', 'Interpreter', 'none'); grid minor;
 
+end
+
+figure(3);
+
+for ii = 1:length(inp.collList)
+    currColl = inp.collList(ii);
+    if inp.uniformInflow(ii) == 1
+        lineType = '--';
+        y = repmat(results.(rowNames(ii)).vi, length(inp.x), 1);
+    elseif inp.uniformInflow(ii) == 0
+        lineType = '-';
+        y = results.(rowNames(ii)).viDistr;
+    end
+
+    hold on;
+    x = inp.x;
+    plot(x, y, lineType, 'DisplayName', rowNames(ii));
+    xlabel('r [m]');
+    ylabel('$v_i$ [-]', 'Interpreter', 'latex');
+    legend('Location','best', 'Interpreter', 'none'); grid minor;
 end
 
 clearvars x y out currColl currFieldName Tvec Qvec Pvec rowNames ftozero f ii

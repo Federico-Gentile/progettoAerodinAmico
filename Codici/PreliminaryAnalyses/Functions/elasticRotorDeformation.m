@@ -10,14 +10,12 @@ x_aero = inp.x;
 
 % Computing angle of attack [deg]
 aThet = Modest' * q * 180/pi;
-alpha = aColl + aTwis + aThet - aIndu*180/pi;
+alpha = aColl + aTwis + aThet - aIndu;
 
 % Aerodynamic loads
-Fcl = griddedInterpolant(aeroData.mach_cl', aeroData.angle_cl', aeroData.cl', 'spline');
-Fcm = griddedInterpolant(aeroData.mach_cm', aeroData.angle_cm', aeroData.cm', 'spline');
 [machq, alphaq] = meshgrid(mach, alpha);
-cl = diag(Fcl(machq', alphaq'));
-cm = diag(Fcm(machq', alphaq'));
+cl = diag(aeroData.Fcl(machq', alphaq'));
+cm = diag(aeroData.Fcm(machq', alphaq'));
 
 %% Aggiungere proiezione del drag sull'equazione di flappeggio
 % Forcing term (RHS)
