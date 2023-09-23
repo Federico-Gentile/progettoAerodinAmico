@@ -11,11 +11,7 @@ environmentData;
 rotorData;
 
 % Aircraft weights list
-inp.targetACw = [55000
-                 65000
-                 75000
-                 85000
-                 95000];
+inp.targetACw = [85000];
 
 % Inflow type 
 % 1 for uniform inflow (computed with classic momentum theory)

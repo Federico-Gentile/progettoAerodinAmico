@@ -4,7 +4,6 @@ clear; close all; clc;
 preProcess;
 
 % Optimization cycle
-
 switch sett.opt.ID
     case 'PSO'
         options = optimoptions('particleswarm','FunctionTolerance', sett.opt.functionTolerance,...
@@ -49,9 +48,9 @@ switch sett.opt.ID
         end
 
     case 'GB'
-        x0 = [0.264397000000000    0.162845000000000    0.175000000000000    0.500000000000000    0.245009000000000    0.0974860000000000    0.175000000000000    0.716888000000000];
-        [X,FVAL,EXITFLAG,OUTPUT] = fmincon(@(x) fitness(x, sett), x0, [],[],[],[],sett.desVar.LB, sett.desVar.UB);
-
+        x0 = [0.264397000000000    0.162845000000000    0.175000000000000    0.500000000000000    0.245009000000000    0.0974860000000000    0.175000000000000    0.716888000000000];        
+        [X,FVAL,EXITFLAG,OUTPUT] = fmincon(@(x) fitness(x, sett), x0, [],[]);
+    
 end
 
 %% Testing   x = [XT,T,rho0,betaTE]
