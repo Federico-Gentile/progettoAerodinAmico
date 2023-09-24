@@ -1,4 +1,7 @@
 function [data_airfoil] = airfoilCoordinatesCFD(x, h_mesh)
+
+%x = [0.334590732839752,0.105356751786128,0.807968876579954,2.834983119393876]; %G016
+%x = [0.3 0.12 0.4322 2.022];  % simile al NACA0012
 % AIRFOILCOORDINATESCFD takes as input vector IGP parameters (x) and scalar
 % mesh size (h_mesh). Returns three vectors: x, y (coordinates of the
 % airfoil points) and h_vect (local element size for mesh generation)
@@ -47,7 +50,7 @@ betaTE_nd = x(4);
 % Dimensional rho and beta from the non-dimensional values
 rho0 = rho0_nd*(T/XT)^2;
 betaTE = betaTE_nd*atan(T/(1-XT));
-betaTE_deg = rad2deg(betaTE);
+betaTE_deg = rad2deg(betaTE)
 
 % Linear system solution to define the IGP polynomial coefficients
 b = [T 0 -tan(betaTE./2) sqrt(2*rho0) 0]';
@@ -72,9 +75,11 @@ data_airfoil.x = [x_u;x_l];
 data_airfoil.y = [y_u;y_l];
 data_airfoil.h_vect = h_airfoil;
 
-% figure()
-% plot(data_airfoil.x, data_airfoil.y,'ok','MarkerSize',4)
+figure()
+hold on
+plot(data_airfoil.x, data_airfoil.y,'r','LineWidth',1.5)
 % title('IGP parameterization - $X_T$,T,$\rho_0$,$\beta_{TE}$','interpreter','latex')
-% hold on
-% xlim([-0.05 1.05])
-% axis equal
+xlim([-0.05 1.05])
+legend('prove')
+grid minor
+axis equal
