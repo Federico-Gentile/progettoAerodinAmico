@@ -1,6 +1,6 @@
 clc
 clear
-close all
+% close all
 
 %% Reinitializing text files
 delete optimization_diary.txt
@@ -20,7 +20,7 @@ diary off
 
 % Cropping nodes
 sett.rotSol.x = sett.rotSol.x([1:sett.rotSol.ind1,sett.rotSol.ind2:end]);
-sett.rotSol.vi = interp1(sett.inflow.bladeStations, sett.inflow.Finfl(sett.inflow.bladeStations',sett.rotData.ACw*ones(1,length(sett.inflow.bladeStations))'), sett.rotSol.x, 'linear', 'extrap');
+sett.rotSol.vi = interp1(sett.inflow.bladeStations, sett.inflow.Finfl(sett.inflow.bladeStations',sett.rotData.ACw*ones(1,length(sett.inflow.bladeStations))'), sett.rotSol.x, 'spline', 'extrap');
 
 %% Tentative rotor solution for CFD guess
 [out] = rotorSolution(sett, sett.aeroData);
@@ -51,7 +51,23 @@ else
     alphaVec = alphaVec([1:(indCorrectionPoint-1), (indCorrectionPoint+1):end]);
     machVec  = machVec([1:(indCorrectionPoint-1), (indCorrectionPoint+1):end]);
 end
-
+set(groot,'defaultAxesTickLabelInterpreter','latex');
+set(groot, 'defaultAxesFontSize', 16)
+alphaVec = reshape(alphaGridCFD,[],1);
+machVec  = reshape(machGridCFD,[],1);
+figure
+plot(alphaVec, machVec, 'bd', 'DisplayName','CFD Stencil','MarkerFaceColor','b','MarkerSize',6)
+hold on;
+plot(out.alpha, out.mach,'r', 'DisplayName','NACA 0012 Trim','LineWidth',1.2)
+plot(alphaVec(11),machVec(11),'d','Color', [0.9290 0.6940 0.1250],'DisplayName','Correction Point','MarkerFaceColor',[0.9290 0.6940 0.1250],'MarkerSize',10)
+grid on
+grid minor
+xlabel('$\alpha$ [$^\circ$]', 'Interpreter','latex','FontSize',16)
+ylabel('$\mathrm{Ma}$ [-]', 'Interpreter','latex','FontSize',16)
+legend show
+legend('Interpreter','latex','FontSize',16)
+xlim([-0.3 8])
+set(gca,'XTick',[0 1 2 3 4 5 6 7 8])
 %% main.sh configuration
 reVec = sett.ambData.rho * sett.rotData.c * machVec * sett.ambData.c/ sett.ambData.mu;
 reCorrectionPoint = sett.ambData.rho * sett.rotData.c * machCorrectionPoint * sett.ambData.c/ sett.ambData.mu;
