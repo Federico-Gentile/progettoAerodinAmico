@@ -5,9 +5,9 @@ addpath('../Optimization/temporaryFiles');
 addpath('../Optimization');
 
 % Mesh Generation User Defined Options
-opts.meshEnumerationStartIndex = 2000;
+opts.meshEnumerationStartIndex = 71;
 opts.meshTypeFlag = "RANS";
-opts.x = [0.264397000000000    0.162845000000000    0.175000000000000    0.500000000000000];  
+opts.x = [0.25125	0.099634	0.13	0.503087];  
 %opts.x = [0.01 0.02 0.1 0.1 0.21 0.21 0.4322 1]; % strange nose
 %opts.x = [0.292145187452082,0.890818975485375,-0.023794010335273,0.161501024200541,0.332505262005317,0.137728997850190,0.406463454094145,1.570632482448465]; %G104 simile a un whitcomb
 %opts.x = [0.2 0.4 0 0 0.4 0.25 0.29 0.5]; %G105 simile serie 6

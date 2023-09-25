@@ -1,5 +1,5 @@
 %% Optimizer ID
-sett.opt.ID = 'GB';
+sett.opt.ID = 'SU';
 
 switch sett.opt.ID
     case 'PSO'
@@ -27,12 +27,12 @@ switch sett.opt.ID
     case 'GA'
 
     case 'SU'
-        sett.opt.runType = 'trials';    % Can be 'trials', 'checkPoint', 'normal'
+        sett.opt.runType = 'checkPoint';    % Can be 'trials', 'checkPoint', 'normal'
         sett.opt.historyFilename = 'SU_history';
         sett.opt.checkPointFile =  'checkPointFile.mat';
         sett.opt.maxFunctionEvaluations = max(400,50*sett.desVar.nVars);
         sett.opt.maxTime = inf;
-        sett.opt.minSurrPoints = 40;
+        sett.opt.minSurrPoints = 30;
 
     case 'GB'
         % History filename

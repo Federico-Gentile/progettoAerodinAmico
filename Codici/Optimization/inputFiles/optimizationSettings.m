@@ -11,7 +11,7 @@ sett.blending.A = 0.02; % amplitude of the blending region (over rotor radius)
 %% Design variable data
 sett.desVar.switchPoint = 0.8;
 sett.desVar.switchMach = sett.desVar.switchPoint*rotData.R*rotData.omega/ambData.c;
-sett.desVar.LB = [ 0.2   0.08  0.175  0.5  0.17  0.08  0.175  0.5 ]; % From Bortolotti
+sett.desVar.LB = [ 0.17 0.08  0.13  0.5  0.17  0.08  0.13  0.5]; % From Bortolotti
 sett.desVar.UB = [ 0.45  0.25  0.9    2.5  0.45  0.25  0.9    2.5 ]; 
 sett.desVar.nVars = 8;
 
@@ -34,7 +34,7 @@ sett.stencil.nAlphaCFD = 6;
 sett.stencil.nMachCFD = 4;
 
 % nCores distribution
-sett.shell.nCoresFine = 18;  % Must be even for MPIRUN restarting reasons
+sett.shell.nCoresFine = 14;  % Must be even for MPIRUN restarting reasons
 sett.shell.nCoresCoarse = 1;
 sett.shell.innerFirstIter = 12;
 

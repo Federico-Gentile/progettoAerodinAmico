@@ -6,11 +6,15 @@ preProcess;
 %% User defined inputs
 
 % Root airfoil IGP coordinates
-x_root = [0.3 0.12 0.4322 2.022];
-
+% x_root = [0.181574	0.127424	0.13 0.521235];  % Best root 
+x_root = [0.38 0.12 0.36 1];
+%x_root = [0.45	0.12	1.5		1.5];
+% x_root = [0.283750	0.212813	0.154062	1.562500] ;
+% x_root = [0.3 0.12 0.4322 2.022];  % simile al NACA0012
 % Tip airfoil RANS lookup table
-tipLookUp = 'aerodynamicDatabase\naca0012_RANS.mat';
-
+tipLookUp = 'aerodynamicDatabase\G71_RANS.mat';
+tipProfileName = 'NACA64012';
+saveflag = 1;
 %% Blade root coefficients evaluation (XFOIL)
 
 % Airfoil creation
@@ -86,7 +90,9 @@ out.CdAtAlphaMax = out.cd(indAlphaMax);
 [~, indMidSpan] = min(abs(sett.rotSol.x - (sett.rotSol.x(1) + (sett.rotSol.x(end) - sett.rotSol.x(1))/2)));
 out.ClAtMidSpan = out.cl(indMidSpan);
 out.CdAtMidSpan = out.cd(indMidSpan);
-
+if saveflag
+    save("out_"+tipProfileName,'out')
+end
 %% Plotting
 
 figure;
@@ -125,4 +131,3 @@ zlabel('cd');
 % subplot(1,2,2); hold on;
 % scatter3(out_xfoil_root.mach, out_xfoil_root.alpha, out.aeroData{1}.cd(out_xfoil_root.mach, out_xfoil_root.alpha));
 % zlabel('cd');
-
